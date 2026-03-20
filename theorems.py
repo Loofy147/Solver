@@ -18,6 +18,7 @@ W7-lb    Solution lower bound:  phi(m) × coprime_b(m)^(k-1)  [exact m=3]
 Closure  Lemma (m=3):           b_{k-1} determined by b_0,...,b_{k-2}
 P5-obs   Non-abelian parity:    S_3/A_3=Z_2 obeys same law
 P6-fiber Product groups:        Z_m×Z_n fiber quotient = Z_gcd(m,n)
+Thm 10.1 Fiber-Uniform:     k=4, m=4 impossible (331,776 cases)
 """
 
 from math import gcd
@@ -207,6 +208,11 @@ def verify_all_theorems(verbose: bool=True) -> Dict[str,bool]:
     if ok: proved(f"|M_3(G_3)|={count} = phi(3)×coprime_b(3)² = {phi_m}×{coprime_b}² = {formula}")
 
     # Summary
+    # ── Thm 10.1: Fiber-Uniform k=4 Impossibility ───────────────────────────
+    if verbose: print(f"\n{B_}Thm 10.1 Fiber-Uniform k=4 Impossibility{Z_}")
+    ok = prove_fiber_uniform_k4_impossible(verbose=verbose)
+    results["10.1"] = ok
+
     n_pass=sum(1 for v in results.values() if v)
     if verbose:
         print(f"\n{'─'*72}")
@@ -238,11 +244,6 @@ def print_cross_domain_table():
     print(hdr); print('  '+'─'*75)
     for row in domains:
         print(f"  {row[0]:<28} {row[1]:<8} {row[2]:<7} {row[3]:<20} {row[4]}")
-
-
-if __name__ == "__main__":
-    verify_all_theorems(verbose=True)
-    print_cross_domain_table()
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -318,3 +319,78 @@ def verify_m4_structure() -> Dict:
         "perm_dist":      dict(perm_dist),
         "consistent_with_thm_6_1": (not column_uniform),
     }
+
+# ══════════════════════════════════════════════════════════════════════════════
+# REAL-3 FIX: Fiber-uniform k=4 exhaustive proof (331,776 cases)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def prove_fiber_uniform_k4_impossible(verbose: bool=True) -> bool:
+    """
+    THEOREM 10.1: No fiber-uniform σ yields a valid k=4 decomposition of G_4^4.
+    Proof method: exhaustive search over all 24^4 = 331,776 fiber-uniform sigmas.
+
+    Fiber-uniform means σ(v) depends only on fiber(v) = (i+j+k+l) mod 4.
+    With 4 fibers and 4 colors, there are 24^4 = 331,776 combinations.
+    This is small enough to check completely in ~40 seconds.
+
+    Result: 0 valid sigmas found → proved impossible.
+    """
+    from itertools import permutations, product as iprod
+    import time
+
+    M=4; K=4; N=M**4
+    ALL_P4 = list(permutations(range(K))); nP=len(ALL_P4)
+
+    def dec4(v):
+        l=v%4; v//=4; k_=v%4; v//=4; j_=v%4; i_=v//4
+        return i_,j_,k_,l
+    def enc4(i,j,k_,l): return i*64+j*16+k_*4+l
+
+    arc_s=[[0]*K for _ in range(N)]
+    for v in range(N):
+        ci,cj,ck,cl=dec4(v)
+        arc_s[v][0]=enc4((ci+1)%M,cj,ck,cl)
+        arc_s[v][1]=enc4(ci,(cj+1)%M,ck,cl)
+        arc_s[v][2]=enc4(ci,cj,(ck+1)%M,cl)
+        arc_s[v][3]=enc4(ci,cj,ck,(cl+1)%M)
+    pa=[[None]*K for _ in range(nP)]
+    for pi,p in enumerate(ALL_P4):
+        for at,c in enumerate(p): pa[pi][c]=at
+    fibers=[sum(dec4(v))%M for v in range(N)]
+
+    def score(sigma):
+        f=[[0]*N for _ in range(K)]
+        for v in range(N):
+            pi=sigma[v]; p=pa[pi]
+            for c in range(K): f[c][v]=arc_s[v][p[c]]
+        def cc(fg):
+            vis=bytearray(N); comps=0
+            for s in range(N):
+                if not vis[s]:
+                    comps+=1; cur=s
+                    while not vis[cur]: vis[cur]=1; cur=fg[cur]
+            return comps
+        return sum(cc(f[c])-1 for c in range(K))
+
+    if verbose:
+        print(f"\n  Checking all 24^4={24**4:,} fiber-uniform sigmas...", end="", flush=True)
+
+    t0=time.perf_counter(); found=0
+    for combo in iprod(range(nP), repeat=M):
+        sigma=[combo[fibers[v]] for v in range(N)]
+        if score(sigma)==0: found+=1
+
+    elapsed=time.perf_counter()-t0
+    if verbose:
+        print(f" done ({elapsed:.1f}s)")
+        if found==0:
+            print(f"  \033[92m■ PROVED: No fiber-uniform σ works for k=4, m=4. "
+                  f"Checked {24**4:,} cases. ■\033[0m")
+        else:
+            print(f"  \033[91m✗ UNEXPECTED: {found} valid fiber-uniform sigmas found\033[0m")
+
+    return found == 0
+
+if __name__ == "__main__":
+    verify_all_theorems(verbose=True)
+    print_cross_domain_table()

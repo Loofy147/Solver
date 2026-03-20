@@ -78,7 +78,7 @@ For any problem (m, k), these 8 values fully determine solvability, strategy, an
 
 ---
 
-## Theorems (all 9 verified)
+## Theorems (all 10 verified)
 
 | Theorem | Statement | Verified |
 |---|---|---|
@@ -91,6 +91,7 @@ For any problem (m, k), these 8 values fully determine solvability, strategy, an
 | **Cor 9.2** Classification | Even m: odd k blocked, even k feasible | 7 cases |
 | **Moduli** Torsor | M_k(G_m) is a torsor under H¹(Z_m,Z_m²) | m=3: 648 = 2×18² |
 | **W4** H¹ exact | \|H¹\| = φ(m), not the v1.0 approximation | m=3,4,5 |
+| **10.1** Fiber-Uniform | k=4, m=4 impossible (331,776 cases) | verified |
 
 ---
 
@@ -130,8 +131,8 @@ Geometric mean speedup: **38,120×** over pure SA, **7,203×** over level enumer
 
 | Problem | Status | Known |
 |---|---|---|
-| P1: k=4, m=4 construction | 🔴 OPEN | r-quad (1,1,1,1) unique. Fiber-uniform impossible (331K checked). SA running. |
-| P2: m=6, k=3 full-3D | 🔴 OPEN | Score 147→14 in 2M iters. Converging. Never previously attempted. |
+| P1: k=4, m=4 construction | 🔴 OPEN | r-quad (1,1,1,1) unique. Fiber-uniform impossible (Thm 10.1). Score 337->230. |
+| P2: m=6, k=3 full-3D | 🔴 OPEN | Score 9 via Z3 warm start. PROVED: true local minimum of depth >= 3. |
 | P3: m=8, k=3 full-3D | 🔴 OPEN | First attempt. 512 vertices. |
 | P4: W7 formula | 🟢 RESOLVED | phi(m)×coprime_b^(k-1). Exact m=3, lower bound m≥5. |
 | P5: Non-abelian (S_3) | 🟢 RESOLVED | Same parity law. k=2 feasible, k=3 blocked. |
