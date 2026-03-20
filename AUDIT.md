@@ -19,7 +19,7 @@
 | :--- | :--- | :--- | :--- |
 | **G1** | Algorithmic | Lack of multi-vertex (coordinated) flips in SA. | **CRITICAL:** Prevents solving $m=6$. |
 | **G2** | Structural | P1 (k=4, m=4) fiber-uniformity is impossible, but no new symmetry has been hypothesized. | **HIGH:** Search remains brute-force. |
-| **G3** | Scalability | No vectorization (NumPy) or parallelization. | **MEDIUM:** Slows down $G_8$ (512 vertices) analysis. |
+| **G3** | Scalability | No vectorization (NumPy) or parallelization. **RESOLVED: Parallel SA engine implemented in core.py.** | **MEDIUM:** Slows down $G_8$ (512 vertices) analysis. |
 | **G4** | Algebraic | Closure Lemma is verified only for $m=3$. | **MEDIUM:** Formal proof missing for $m > 3$. |
 
 ---
@@ -27,6 +27,7 @@
 ## 3. High-Impact Improvement Roadmap
 
 ### Phase A: The Barrier-Breaker (Immediate)
+1. **Parallel SA Seeds (COMPLETED):** Implemented `run_parallel_sa` in `core.py` utilizing `multiprocessing` for multi-core scaling.
 1.  **Coordinated 3-Flip Moves:** Update `run_sa` to occasionally attempt 3-vertex swaps that maintain fiber constraints or target the $Z_3$ periodic structure.
 2.  **Symmetry Seeding for P1:** Use the $Z_2$ quotient of $Z_4$ to seed $k=4$ solutions.
 

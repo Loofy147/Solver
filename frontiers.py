@@ -156,31 +156,18 @@ def solve_P2(max_iter: int=5_000_000, seeds=range(3),
     """
     G_6: 216 vertices, full-3D SA.
     Column-uniform proved impossible (parity). This is the first serious attempt.
-    
-    Previous run (2M iters, 1 seed): score 147→14. Shows convergence.
-    Target: ~10M iterations to reach 0.
     """
     print(f"\n{'═'*72}")
-    print(f"{W_}P2: m=6, k=3 — Full-3D SA on G_6{Z_}")
+    print(f"P2: m=6, k=3 — Parallel SA on G_6")
     print(hr())
-    note("Column-uniform impossible (Thm 6.1). First serious full-3D attempt.")
-    note("Previous run: score 147→14 in 2M iters. Getting close.")
-    note(f"Space: 6^216 ≈ 10^168. Budget: {max_iter:,} × {len(list(seeds))} seeds.")
-    print()
 
-    best_overall=None; best_score=999
-    for seed in seeds:
-        sol, stats = run_sa(6, seed=seed, max_iter=max_iter, verbose=verbose)
-        s=stats['best']
-        sym=f"{G_}SOLVED{Z_}" if s==0 else f"best={s}"
-        print(f"  seed={seed}: {sym}  iters={stats['iters']:,}  "
-              f"{stats['elapsed']:.1f}s  reheats={stats['reheats']}")
-        if s<best_score: best_score=s; best_overall=sol
-        if s==0: break
+    sol, stats_list = run_parallel_sa(6, list(seeds), max_iter=max_iter)
+    best_stats = min(stats_list, key=lambda x: x['best'])
+    best_score = best_stats['best']
 
-    if best_score==0:
+    if best_score == 0:
         found("m=6, k=3: SOLVED — first ever solution for G_6!")
-        return best_overall
+        return sol
     open_(f"m=6, k=3: best={best_score}. Needs larger budget (~10M iters).")
     return None
 
@@ -270,28 +257,19 @@ def solve_P2_warm_start(max_iter=10_000_000, seed=0, verbose=True):
 def solve_P3(max_iter: int=3_000_000, seeds=range(2),
              verbose: bool=True) -> Optional[Dict]:
     """
-    G_8: 512 vertices. Harder than m=6. Tests scaling.
-    Score function needs 512 components checked per iteration.
+    G_8: 512 vertices. Harder than m=6.
     """
     print(f"\n{'═'*72}")
-    print(f"{W_}P3: m=8, k=3 — Full-3D SA on G_8{Z_}")
+    print(f"P3: m=8, k=3 — Parallel SA on G_8")
     print(hr())
-    note("512 vertices. Column-uniform impossible (parity).")
-    note(f"Budget: {max_iter:,} × {len(list(seeds))} seeds.")
-    print()
 
-    best_overall=None; best_score=999
-    for seed in seeds:
-        sol, stats = run_sa(8, seed=seed, max_iter=max_iter, verbose=verbose)
-        s=stats['best']
-        sym=f"{G_}SOLVED{Z_}" if s==0 else f"best={s}"
-        print(f"  seed={seed}: {sym}  iters={stats['iters']:,}  {stats['elapsed']:.1f}s")
-        if s<best_score: best_score=s; best_overall=sol
-        if s==0: break
+    sol, stats_list = run_parallel_sa(8, list(seeds), max_iter=max_iter)
+    best_stats = min(stats_list, key=lambda x: x['best'])
+    best_score = best_stats['best']
 
-    if best_score==0:
+    if best_score == 0:
         found("m=8, k=3: SOLVED!")
-        return best_overall
+        return sol
     open_(f"m=8, k=3: best={best_score}. Harder than m=6.")
     return None
 

@@ -387,3 +387,33 @@ if __name__ == "__main__":
         print(f"  m=7: found in {dt:.2f}s, verified={ok}")
     else:
         print(f"  m=7: not found in budget")
+
+def _sa_worker(args):
+    """Worker function for parallel SA seeds."""
+    m, seed, max_iter, T_init, T_min = args
+    return run_sa(m, seed=seed, max_iter=max_iter, T_init=T_init, T_min=T_min)
+
+def run_parallel_sa(m: int, seeds: List[int], max_iter: int=5_000_000,
+                    T_init: float=3.0, T_min: float=0.003) -> Tuple[Optional[Dict], List[Dict]]:
+    """
+    Execute multiple SA seeds in parallel.
+    Returns (first_solution | None, list_of_all_stats).
+    """
+    from multiprocessing import Pool, cpu_count
+
+    n_procs = min(len(seeds), cpu_count())
+    args = [(m, s, max_iter, T_init, T_min) for s in seeds]
+
+    all_stats = []
+    best_sol = None
+
+    print(f"    Spawning {n_procs} parallel SA processes for G_{m}...")
+    with Pool(processes=n_procs) as pool:
+        for sol, stats in pool.imap_unordered(_sa_worker, args):
+            all_stats.append(stats)
+            if sol and not best_sol:
+                best_sol = sol
+                # Note: imap_unordered doesn't allow easy early exit without
+                # more complex logic, but for these budgets it is fine.
+
+    return best_sol, all_stats
