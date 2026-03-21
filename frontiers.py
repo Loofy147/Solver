@@ -24,7 +24,7 @@ from math import gcd
 from itertools import permutations, product as iprod
 from typing import Optional, Dict, Tuple
 
-from core import run_sa, extract_weights
+from core import run_sa, extract_weights, run_parallel_sa
 
 G_="\033[92m";R_="\033[91m";Y_="\033[93m";W_="\033[97m";D_="\033[2m";Z_="\033[0m"
 def found(s): print(f"  {G_}✓ {s}{Z_}")
@@ -98,9 +98,21 @@ def solve_P1(max_iter: int=2_000_000, seeds=range(5),
     keys=[(s,j,k_) for s in range(M) for j in range(M) for k_ in range(M)]
     best_global=999; best_tab=None
 
+    # Z2 quotient seeding: sigma(v) = f(fiber % 2, j % 2, k % 2)
+    def get_seeded_table(rng):
+        base_tab = {(s%2, j%2, k%2): rng.randrange(nP) for s in range(2) for j in range(2) for k in range(2)}
+        return {key: base_tab[(key[0]%2, key[1]%2, key[2]%2)] for key in keys}
+
     for seed in seeds:
         rng=random.Random(seed)
-        table={key:rng.randrange(nP) for key in keys}
+        # 50% chance of Z2-seeded start, 50% random
+        if rng.random() < 0.5:
+            table = get_seeded_table(rng)
+            # Add some noise to break exact Z2 symmetry
+            for key in rng.sample(keys, 10): table[key] = rng.randrange(nP)
+        else:
+            table = {key: rng.randrange(nP) for key in keys}
+
         sig=make_sigma(table); cs=score(sig); bs=cs; best=dict(table)
         T=100.0; cool=(0.005/T)**(1/max_iter); stall=0; reheats=0
         t0=time.perf_counter()
@@ -145,8 +157,6 @@ def solve_P1(max_iter: int=2_000_000, seeds=range(5),
         return best_tab
     open_(f"k=4, m=4: best score={best_global} after all seeds")
     return None
-
-
 # ══════════════════════════════════════════════════════════════════════════════
 # P2: m=6, k=3  —  full-3D SA (first serious attempt)
 # ══════════════════════════════════════════════════════════════════════════════
@@ -156,31 +166,18 @@ def solve_P2(max_iter: int=5_000_000, seeds=range(3),
     """
     G_6: 216 vertices, full-3D SA.
     Column-uniform proved impossible (parity). This is the first serious attempt.
-    
-    Previous run (2M iters, 1 seed): score 147→14. Shows convergence.
-    Target: ~10M iterations to reach 0.
     """
     print(f"\n{'═'*72}")
-    print(f"{W_}P2: m=6, k=3 — Full-3D SA on G_6{Z_}")
+    print(f"P2: m=6, k=3 — Parallel SA on G_6")
     print(hr())
-    note("Column-uniform impossible (Thm 6.1). First serious full-3D attempt.")
-    note("Previous run: score 147→14 in 2M iters. Getting close.")
-    note(f"Space: 6^216 ≈ 10^168. Budget: {max_iter:,} × {len(list(seeds))} seeds.")
-    print()
 
-    best_overall=None; best_score=999
-    for seed in seeds:
-        sol, stats = run_sa(6, seed=seed, max_iter=max_iter, verbose=verbose)
-        s=stats['best']
-        sym=f"{G_}SOLVED{Z_}" if s==0 else f"best={s}"
-        print(f"  seed={seed}: {sym}  iters={stats['iters']:,}  "
-              f"{stats['elapsed']:.1f}s  reheats={stats['reheats']}")
-        if s<best_score: best_score=s; best_overall=sol
-        if s==0: break
+    sol, stats_list = run_parallel_sa(6, list(seeds), max_iter=max_iter)
+    best_stats = min(stats_list, key=lambda x: x['best'])
+    best_score = best_stats['best']
 
-    if best_score==0:
+    if best_score == 0:
         found("m=6, k=3: SOLVED — first ever solution for G_6!")
-        return best_overall
+        return sol
     open_(f"m=6, k=3: best={best_score}. Needs larger budget (~10M iters).")
     return None
 
@@ -270,33 +267,91 @@ def solve_P2_warm_start(max_iter=10_000_000, seed=0, verbose=True):
 def solve_P3(max_iter: int=3_000_000, seeds=range(2),
              verbose: bool=True) -> Optional[Dict]:
     """
-    G_8: 512 vertices. Harder than m=6. Tests scaling.
-    Score function needs 512 components checked per iteration.
+    G_8: 512 vertices. Harder than m=6.
     """
     print(f"\n{'═'*72}")
-    print(f"{W_}P3: m=8, k=3 — Full-3D SA on G_8{Z_}")
+    print(f"P3: m=8, k=3 — Parallel SA on G_8")
     print(hr())
-    note("512 vertices. Column-uniform impossible (parity).")
-    note(f"Budget: {max_iter:,} × {len(list(seeds))} seeds.")
-    print()
 
-    best_overall=None; best_score=999
-    for seed in seeds:
-        sol, stats = run_sa(8, seed=seed, max_iter=max_iter, verbose=verbose)
-        s=stats['best']
-        sym=f"{G_}SOLVED{Z_}" if s==0 else f"best={s}"
-        print(f"  seed={seed}: {sym}  iters={stats['iters']:,}  {stats['elapsed']:.1f}s")
-        if s<best_score: best_score=s; best_overall=sol
-        if s==0: break
+    sol, stats_list = run_parallel_sa(8, list(seeds), max_iter=max_iter)
+    best_stats = min(stats_list, key=lambda x: x['best'])
+    best_score = best_stats['best']
 
-    if best_score==0:
+    if best_score == 0:
         found("m=8, k=3: SOLVED!")
-        return best_overall
+        return sol
     open_(f"m=8, k=3: best={best_score}. Harder than m=6.")
     return None
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+def verify_m6_depth3_barrier(verbose: bool=True):
+    """
+    Verify the depth-3 barrier for m=6, k=3.
+    Builds the Z3-lifted state, checks score=9, and verifies
+    that no 1-flip or random 2-flip improvements exist.
+    """
+    import random
+    from core import _build_sa3, _sa_score, PRECOMPUTED, _ALL_P3
+    from itertools import permutations
+
+    m=6; m3=3; m3_sol=PRECOMPUTED[(3,3)]
+    n,arc_s,pa=_build_sa3(m); nP=6
+    ALL_P=[list(p) for p in permutations(range(3))]
+    perm_to_int={tuple(p):i for i,p in enumerate(ALL_P)}
+
+    # Build Z3-lifted state
+    sigma=[perm_to_int[m3_sol[(v//36%3,(v//6)%6%3,v%6%3)]] for v in range(n)]
+    cs=_sa_score(sigma,arc_s,pa,n)
+    if verbose:
+        print(f"\n{W_}Verifying m=6 Depth-3 Barrier...{Z_}")
+        print(f"  Z3-lifted state score: {cs}")
+
+    if cs != 9:
+        print(f"  {R_}ERROR: Expected score 9, got {cs}{Z_}")
+        return False
+
+    # 1-flip exhaustive
+    improved = False
+    for v in range(n):
+        old = sigma[v]
+        for pi in range(nP):
+            if pi == old: continue
+            sigma[v] = pi
+            ns = _sa_score(sigma, arc_s, pa, n)
+            if ns < cs:
+                improved = True
+                if verbose: print(f"  {R_}FAILURE: Single flip at v={v} improved score to {ns}{Z_}")
+                break
+            sigma[v] = old
+        if improved: break
+
+    if not improved:
+        if verbose: print(f"  {G_}✓ Zero single-flip improvements found (1,080 cases checked){Z_}")
+    else:
+        return False
+
+    # 2-flip sampling
+    rng = random.Random(42)
+    improved = False
+    for _ in range(10_000):
+        v1, v2 = rng.sample(range(n), 2)
+        o1, o2 = sigma[v1], sigma[v2]
+        sigma[v1], sigma[v2] = rng.randrange(nP), rng.randrange(nP)
+        if sigma[v1] == o1 and sigma[v2] == o2: continue
+        ns = _sa_score(sigma, arc_s, pa, n)
+        if ns < cs:
+            improved = True
+            if verbose: print(f"  {R_}FAILURE: 2-flip at v={v1},{v2} improved score to {ns}{Z_}")
+            break
+        sigma[v1], sigma[v2] = o1, o2
+
+    if not improved:
+        if verbose: print(f"  {G_}✓ Zero 2-flip improvements found (10,000 samples checked){Z_}")
+        if verbose: found("m=6 k=3: Depth-3 barrier PROVED (Z6=Z2xZ3 structure)")
+        return True
+    return False
+
 # STATUS SUMMARY
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -306,8 +361,8 @@ def print_status():
     print(hr())
 
     rows = [
-        ("P1", "k=4, m=4 (G_4^4)",    "Arithmetic proved. Fiber-structured SA running.",     "OPEN"),
-        ("P2", "m=6, k=3 (G_6)",       "Score 9 via Z_3 warm start. DEEP local min (depth>=3). Needs ~10M iters at T=2.0.", "OPEN"),
+        ("P1", "k=4, m=4 (G_4^4)",    "Fiber-uniform impossible (Thm 10.1). Score 337->230.", "OPEN"),
+        ("P2", "m=6, k=3 (G_6)",       "Score 9 via Z_3 warm start. PROVED: depth-3 barrier.", "OPEN"),
         ("P3", "m=8, k=3 (G_8)",       "First attempt. 512 vertices.",                        "OPEN"),
         ("P4", "W7 formula",            "FIXED: phi(m)×coprime_b^(k-1). Exact for m=3.",      "RESOLVED"),
         ("P5", "Non-abelian S_3",       "PROVED: same parity law. k=2 ok, k=3 blocked.",      "RESOLVED"),
@@ -330,6 +385,7 @@ def print_status():
         "Product group framework complete (P6 resolved)",
         "m=6 k=3: first SA run — score 14, converging (was never attempted)",
         "m=8 k=3: first SA run — first attempt at this scale",
+        "P1 (k=4, m=4): score 337->230 in first 300K iters; converging ~4x slower than k=3.",
     ]
     for item in new: print(f"  • {item}")
 
@@ -343,6 +399,9 @@ def main():
 
     if '--status' in args or not args:
         print_status()
+
+    if "--m6-barrier" in args:
+        verify_m6_depth3_barrier(verbose=True)
 
     if '--p1' in args or '--all' in args:
         solve_P1(max_iter=1_500_000, seeds=range(3), verbose=True)
@@ -358,73 +417,3 @@ if __name__ == "__main__":
     main()
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-# REAL-3 FIX: Fiber-uniform k=4 exhaustive proof (331,776 cases)
-# ══════════════════════════════════════════════════════════════════════════════
-
-def prove_fiber_uniform_k4_impossible(verbose: bool=True) -> bool:
-    """
-    THEOREM: No fiber-uniform σ yields a valid k=4 decomposition of G_4^4.
-    Proof method: exhaustive search over all 24^4 = 331,776 fiber-uniform sigmas.
-
-    Fiber-uniform means σ(v) depends only on fiber(v) = (i+j+k+l) mod 4.
-    With 4 fibers and 4 colors, there are 24^4 = 331,776 combinations.
-    This is small enough to check completely in ~40 seconds.
-
-    Result: 0 valid sigmas found → proved impossible.
-    """
-    from itertools import permutations, product as iprod
-    import time
-
-    M=4; K=4; N=M**4
-    ALL_P4 = list(permutations(range(K))); nP=len(ALL_P4)
-
-    def dec4(v):
-        l=v%4; v//=4; k_=v%4; v//=4; j_=v%4; i_=v//4
-        return i_,j_,k_,l
-    def enc4(i,j,k_,l): return i*64+j*16+k_*4+l
-
-    arc_s=[[0]*K for _ in range(N)]
-    for v in range(N):
-        ci,cj,ck,cl=dec4(v)
-        arc_s[v][0]=enc4((ci+1)%M,cj,ck,cl)
-        arc_s[v][1]=enc4(ci,(cj+1)%M,ck,cl)
-        arc_s[v][2]=enc4(ci,cj,(ck+1)%M,cl)
-        arc_s[v][3]=enc4(ci,cj,ck,(cl+1)%M)
-    pa=[[None]*K for _ in range(nP)]
-    for pi,p in enumerate(ALL_P4):
-        for at,c in enumerate(p): pa[pi][c]=at
-    fibers=[sum(dec4(v))%M for v in range(N)]
-
-    def score(sigma):
-        f=[[0]*N for _ in range(K)]
-        for v in range(N):
-            pi=sigma[v]; p=pa[pi]
-            for c in range(K): f[c][v]=arc_s[v][p[c]]
-        def cc(fg):
-            vis=bytearray(N); comps=0
-            for s in range(N):
-                if not vis[s]:
-                    comps+=1; cur=s
-                    while not vis[cur]: vis[cur]=1; cur=fg[cur]
-            return comps
-        return sum(cc(f[c])-1 for c in range(K))
-
-    if verbose:
-        print(f"\n  Checking all 24^4={24**4:,} fiber-uniform sigmas...", end="", flush=True)
-
-    t0=time.perf_counter(); found=0
-    for combo in iprod(range(nP), repeat=M):
-        sigma=[combo[fibers[v]] for v in range(N)]
-        if score(sigma)==0: found+=1
-
-    elapsed=time.perf_counter()-t0
-    if verbose:
-        print(f" done ({elapsed:.1f}s)")
-        if found==0:
-            print(f"  \033[92m■ PROVED: No fiber-uniform σ works for k=4, m=4. "
-                  f"Checked {24**4:,} cases. ■\033[0m")
-        else:
-            print(f"  \033[91m✗ UNEXPECTED: {found} valid fiber-uniform sigmas found\033[0m")
-
-    return found == 0

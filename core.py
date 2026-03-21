@@ -272,10 +272,11 @@ def _sa_score(sigma: List[int], arc_s, pa, n: int) -> int:
 
 def run_sa(m: int, seed: int=0, max_iter: int=5_000_000,
            T_init: float=3.0, T_min: float=0.003,
-           verbose: bool=False, report_n: int=500_000) -> Tuple[Optional[Dict], Dict]:
+           verbose: bool=False, report_n: int=500_000,
+           p_multi: float=0.05) -> Tuple[Optional[Dict], Dict]:
     """
-    Full-3D SA for G_m (k=3). Returns (sigma_map | None, stats).
-    sigma_map is None if max_iter exhausted without solution.
+    Full-3D SA for G_m (k=3) with coordinated multi-vertex flips.
+    Returns (sigma_map | None, stats).
     """
     import time
     n, arc_s, pa = _build_sa3(m)
@@ -284,49 +285,53 @@ def run_sa(m: int, seed: int=0, max_iter: int=5_000_000,
     cs = _sa_score(sigma, arc_s, pa, n)
     bs = cs; best = sigma[:]
     cool = (T_min/T_init)**(1.0/max_iter)
-    T = T_init; stall=0; reheats=0; t0=__import__('time').perf_counter()
+    T = T_init; stall=0; reheats=0; t0=time.perf_counter()
 
     for it in range(max_iter):
         if cs == 0: break
-        if cs <= 2:                                   # repair mode
-            vlist = list(range(n)); rng.shuffle(vlist)
-            fixed = False
-            for v in vlist:
-                old = sigma[v]
-                for pi in rng.sample(range(nP), nP):
-                    if pi == old: continue
-                    sigma[v] = pi
-                    ns = _sa_score(sigma, arc_s, pa, n)
-                    if ns < cs: cs=ns; fixed=True
-                    if cs < bs: bs=cs; best=sigma[:]
-                    if ns >= cs: sigma[v] = old
-                    if fixed: break
-                if fixed: break
-            if cs == 0: break
-            T *= cool; continue
-        v=rng.randrange(n); old=sigma[v]; new=rng.randrange(nP)
-        if new==old: T*=cool; continue
-        sigma[v]=new; ns=_sa_score(sigma,arc_s,pa,n); d=ns-cs
-        if d<0 or rng.random()<math.exp(-d/max(T,1e-9)):
-            cs=ns
-            if cs<bs: bs=cs; best=sigma[:]; stall=0
-            else: stall+=1
-        else: sigma[v]=old; stall+=1
-        if stall>80_000:
-            T=T_init/(2**reheats); reheats+=1; stall=0; sigma=best[:]; cs=bs
-        T*=cool
-        if verbose and (it+1)%report_n==0:
-            el=__import__('time').perf_counter()-t0
+
+        # Periodic check for coordinated multi-flips to escape traps
+        if rng.random() < p_multi:
+            # Pick a vertex and 2 others to perform a coordinated 3-flip
+            v_indices = rng.sample(range(n), 3)
+            old_vals = [sigma[v] for v in v_indices]
+            new_vals = [rng.randrange(nP) for _ in range(3)]
+            for i, v in enumerate(v_indices): sigma[v] = new_vals[i]
+            ns = _sa_score(sigma, arc_s, pa, n)
+            d = ns - cs
+            if d < 0 or (T > 1e-9 and rng.random() < math.exp(-d / T)):
+                cs = ns
+                if cs < bs: bs = cs; best = sigma[:]; stall = 0
+                else: stall += 1
+            else:
+                for i, v in enumerate(v_indices): sigma[v] = old_vals[i]
+                stall += 1
+        else:
+            # Standard single-flip
+            v = rng.randrange(nP if m==1 else n); old = sigma[v]; new = rng.randrange(nP)
+            if new == old: T *= cool; continue
+            sigma[v] = new; ns = _sa_score(sigma, arc_s, pa, n); d = ns - cs
+            if d < 0 or (T > 1e-9 and rng.random() < math.exp(-d / T)):
+                cs = ns
+                if cs < bs: bs = cs; best = sigma[:]; stall = 0
+                else: stall += 1
+            else: sigma[v] = old; stall += 1
+
+        if stall > 80_000:
+            T = T_init / (2**reheats); reheats += 1; stall = 0; sigma = best[:]; cs = bs
+        T *= cool
+        if verbose and (it + 1) % report_n == 0:
+            el = time.perf_counter() - t0
             print(f"    it={it+1:>8,} T={T:.5f} s={cs} best={bs} reh={reheats} {el:.1f}s")
 
-    elapsed=__import__('time').perf_counter()-t0
-    sol=None
-    if bs==0:
-        sol={}
-        for idx,pi in enumerate(best):
-            i,rem=divmod(idx,m*m); j,k=divmod(rem,m)
-            sol[(i,j,k)]=tuple(_ALL_P3[pi])
-    return sol, {"best":bs,"iters":it+1,"elapsed":elapsed,"reheats":reheats}
+    elapsed = time.perf_counter() - t0
+    sol = None
+    if bs == 0:
+        sol = {}
+        for idx, pi in enumerate(best):
+            i, rem = divmod(idx, m * m); j, k = divmod(rem, m)
+            sol[(i, j, k)] = tuple(_ALL_P3[pi])
+    return sol, {"best": bs, "iters": it + 1, "elapsed": elapsed, "reheats": reheats}
 
 
 def solve(m: int, k: int=3, seed: int=42) -> Optional[Dict]:
@@ -387,3 +392,33 @@ if __name__ == "__main__":
         print(f"  m=7: found in {dt:.2f}s, verified={ok}")
     else:
         print(f"  m=7: not found in budget")
+
+def _sa_worker(args):
+    """Worker function for parallel SA seeds."""
+    m, seed, max_iter, T_init, T_min, p_multi = args
+    return run_sa(m, seed=seed, max_iter=max_iter, T_init=T_init, T_min=T_min, p_multi=p_multi)
+
+def run_parallel_sa(m: int, seeds: List[int], max_iter: int=5_000_000,
+                    T_init: float=3.0, T_min: float=0.003) -> Tuple[Optional[Dict], List[Dict]]:
+    """
+    Execute multiple SA seeds in parallel.
+    Returns (first_solution | None, list_of_all_stats).
+    """
+    from multiprocessing import Pool, cpu_count
+
+    n_procs = min(len(seeds), cpu_count())
+    args = [(m, s, max_iter, T_init, T_min, 0.05) for s in seeds]
+
+    all_stats = []
+    best_sol = None
+
+    print(f"    Spawning {n_procs} parallel SA processes for G_{m}...")
+    with Pool(processes=n_procs) as pool:
+        for sol, stats in pool.imap_unordered(_sa_worker, args):
+            all_stats.append(stats)
+            if sol and not best_sol:
+                best_sol = sol
+                # Note: imap_unordered doesn't allow easy early exit without
+                # more complex logic, but for these budgets it is fine.
+
+    return best_sol, all_stats
