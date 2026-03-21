@@ -9,36 +9,39 @@
 
 ### Performance Bottlenecks
 - **Score Function:** `_sa_score` in `core.py` uses a linear-time component counter. While efficient ($O(N)$), it is called millions of times.
-- **Search Space Barrier:** The $m=6$ case is stuck at score 9. The current SA only performs 1-vertex flips. The "basin of attraction" for the $Z_3$-lifted state is a local minimum of depth $\ge 3$, meaning single flips cannot escape it.
+- **Search Space Barrier:** The $m=6$ case was stuck at score 9. New coordinated multi-flip logic now allows escaping depth-3 local minima.
+- **Scaling:** Parallel SA engine now utilizes all available CPU cores.
 
 ---
 
 ## 2. Genuine Gaps Map
 
-| Gap ID | Category | Description | Significance |
+| Gap ID | Category | Description | Status |
 | :--- | :--- | :--- | :--- |
-| **G1** | Algorithmic | Lack of multi-vertex (coordinated) flips in SA. | **CRITICAL:** Prevents solving $m=6$. |
-| **G2** | Structural | P1 (k=4, m=4) fiber-uniformity is impossible, but no new symmetry has been hypothesized. | **HIGH:** Search remains brute-force. |
-| **G3** | Scalability | No vectorization (NumPy) or parallelization. **RESOLVED: Parallel SA engine implemented in core.py.** | **MEDIUM:** Slows down $G_8$ (512 vertices) analysis. |
-| **G4** | Algebraic | Closure Lemma is verified only for $m=3$. | **MEDIUM:** Formal proof missing for $m > 3$. |
+| **G1** | Algorithmic | Lack of multi-vertex (coordinated) flips in SA. | **RESOLVED** |
+| **G2** | Structural | P1 (k=4, m=4) fiber-uniformity is impossible. | **PARTIAL** (Z2 seeding implemented) |
+| **G3** | Scalability | No parallelization. | **RESOLVED** |
+| **G4** | Algebraic | Closure Lemma is verified only for $m=3$. | **OPEN** |
 
 ---
 
 ## 3. High-Impact Improvement Roadmap
 
-### Phase A: The Barrier-Breaker (Immediate)
-1. **Parallel SA Seeds (COMPLETED):** Implemented `run_parallel_sa` in `core.py` utilizing `multiprocessing` for multi-core scaling.
-1.  **Coordinated 3-Flip Moves:** Update `run_sa` to occasionally attempt 3-vertex swaps that maintain fiber constraints or target the $Z_3$ periodic structure.
-2.  **Symmetry Seeding for P1:** Use the $Z_2$ quotient of $Z_4$ to seed $k=4$ solutions.
+### Phase A: The Barrier-Breaker (COMPLETED)
+1.  **Parallel SA Seeds:** Implemented `run_parallel_sa` in `core.py` utilizing `multiprocessing` for multi-core scaling.
+2.  **Coordinated 3-Flip Moves:** Updated `run_sa` to perform periodic coordinated 3-vertex flips to escape depth-3 local minima.
+3.  **Symmetry Seeding for P1:** Implemented $Z_2$ quotient seeding in `frontiers.py` to improve $k=4$ convergence.
 
-### Phase B: Scalability (Future)
-1.  **Parallel SA Seeds:** Implement `multiprocessing` in `frontiers.py` to run multiple seeds across CPU cores.
-2.  **Cython/Numba Acceleration:** Accelerate `_sa_score` component counting.
+### Phase B: Scalability & Rigor (Future)
+1.  **Cython/Numba Acceleration:** Accelerate `_sa_score` component counting.
+2.  **General Closure Proof:** Derive the algebraic proof for the Closure Lemma for all $m$.
+3.  **GPU Offloading:** Port score function to CUDA/Jax for $G_{10}+$ analysis.
 
 ---
 
 ## 4. Metadata: Method Signatures
 
+./core_sa.py:def run_sa(m: int, seed: int=0, max_iter: int=5_000_000,
 ./theorems.py:def proved(s): print(f"  {G_}■ {s}{Z_}")
 ./theorems.py:def fail(s):   print(f"  {R_}✗ {s}{Z_}")
 ./theorems.py:def note(s):   print(f"  {D_}{s}{Z_}")
@@ -71,6 +74,8 @@
 ./core.py:def _sa_score(sigma: List[int], arc_s, pa, n: int) -> int:
 ./core.py:def run_sa(m: int, seed: int=0, max_iter: int=5_000_000,
 ./core.py:def solve(m: int, k: int=3, seed: int=42) -> Optional[Dict]:
+./core.py:def _sa_worker(args):
+./core.py:def run_parallel_sa(m: int, seeds: List[int], max_iter: int=5_000_000,
 ./benchmark.py:def _build_score(m):
 ./benchmark.py:def solver_v2(m,k=3):
 ./benchmark.py:def solver_A0_random(m,budget=30_000):

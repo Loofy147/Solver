@@ -24,7 +24,7 @@ from math import gcd
 from itertools import permutations, product as iprod
 from typing import Optional, Dict, Tuple
 
-from core import run_sa, extract_weights
+from core import run_sa, extract_weights, run_parallel_sa
 
 G_="\033[92m";R_="\033[91m";Y_="\033[93m";W_="\033[97m";D_="\033[2m";Z_="\033[0m"
 def found(s): print(f"  {G_}✓ {s}{Z_}")
@@ -98,9 +98,21 @@ def solve_P1(max_iter: int=2_000_000, seeds=range(5),
     keys=[(s,j,k_) for s in range(M) for j in range(M) for k_ in range(M)]
     best_global=999; best_tab=None
 
+    # Z2 quotient seeding: sigma(v) = f(fiber % 2, j % 2, k % 2)
+    def get_seeded_table(rng):
+        base_tab = {(s%2, j%2, k%2): rng.randrange(nP) for s in range(2) for j in range(2) for k in range(2)}
+        return {key: base_tab[(key[0]%2, key[1]%2, key[2]%2)] for key in keys}
+
     for seed in seeds:
         rng=random.Random(seed)
-        table={key:rng.randrange(nP) for key in keys}
+        # 50% chance of Z2-seeded start, 50% random
+        if rng.random() < 0.5:
+            table = get_seeded_table(rng)
+            # Add some noise to break exact Z2 symmetry
+            for key in rng.sample(keys, 10): table[key] = rng.randrange(nP)
+        else:
+            table = {key: rng.randrange(nP) for key in keys}
+
         sig=make_sigma(table); cs=score(sig); bs=cs; best=dict(table)
         T=100.0; cool=(0.005/T)**(1/max_iter); stall=0; reheats=0
         t0=time.perf_counter()
@@ -145,8 +157,6 @@ def solve_P1(max_iter: int=2_000_000, seeds=range(5),
         return best_tab
     open_(f"k=4, m=4: best score={best_global} after all seeds")
     return None
-
-
 # ══════════════════════════════════════════════════════════════════════════════
 # P2: m=6, k=3  —  full-3D SA (first serious attempt)
 # ══════════════════════════════════════════════════════════════════════════════
