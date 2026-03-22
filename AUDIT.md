@@ -41,65 +41,65 @@
 
 ## 4. Metadata: Method Signatures
 
-./core_sa.py:def run_sa(m: int, seed: int=0, max_iter: int=5_000_000,
-./theorems.py:def proved(s): print(f"  {G_}■ {s}{Z_}")
-./theorems.py:def fail(s):   print(f"  {R_}✗ {s}{Z_}")
-./theorems.py:def note(s):   print(f"  {D_}{s}{Z_}")
-./theorems.py:def build_proof(m: int, k: int, solution=None) -> Dict:
-./theorems.py:def verify_all_theorems(verbose: bool=True) -> Dict[str,bool]:
-./theorems.py:def print_cross_domain_table():
-./theorems.py:def compute_H1_classes(m: int) -> Dict:
-./theorems.py:def verify_m4_structure() -> Dict:
-./theorems.py:def prove_fiber_uniform_k4_impossible(verbose: bool=True) -> bool:
-./frontiers.py:def found(s): print(f"  {G_}✓ {s}{Z_}")
-./frontiers.py:def open_(s): print(f"  {Y_}◆ OPEN: {s}{Z_}")
-./frontiers.py:def note(s):  print(f"  {D_}{s}{Z_}")
-./frontiers.py:def hr(n=72): return "─"*n
-./frontiers.py:def solve_P1(max_iter: int=2_000_000, seeds=range(5),
-./frontiers.py:def solve_P2(max_iter: int=5_000_000, seeds=range(3),
-./frontiers.py:def solve_P2_warm_start(max_iter=10_000_000, seed=0, verbose=True):
-./frontiers.py:def solve_P3(max_iter: int=3_000_000, seeds=range(2),
-./frontiers.py:def verify_m6_depth3_barrier(verbose: bool=True):
-./frontiers.py:def print_status():
-./frontiers.py:def main():
-./core.py:def extract_weights(m: int, k: int) -> Weights:
-./core.py:def weights_table(m_range=range(2,11), k_range=range(2,7)) -> List[Weights]:
-./core.py:def verify_sigma(sigma: Dict[Tuple,Tuple], m: int) -> bool:
-./core.py:def table_to_sigma(table: List[Dict], m: int) -> Dict[Tuple,Tuple]:
-./core.py:def _level_valid(lv: Dict[int,list], m: int) -> bool:
-./core.py:def valid_levels(m: int) -> List[Dict]:
-./core.py:def compose_Q(table: List[Dict], m: int) -> List[Dict]:
-./core.py:def is_single_cycle(Q: Dict, m: int) -> bool:
-./core.py:def _build_sa3(m: int):
-./core.py:def _sa_score(sigma: List[int], arc_s, pa, n: int) -> int:
-./core.py:def run_sa(m: int, seed: int=0, max_iter: int=5_000_000,
-./core.py:def solve(m: int, k: int=3, seed: int=42) -> Optional[Dict]:
-./core.py:def _sa_worker(args):
-./core.py:def run_parallel_sa(m: int, seeds: List[int], max_iter: int=5_000_000,
-./benchmark.py:def _build_score(m):
-./benchmark.py:def solver_v2(m,k=3):
-./benchmark.py:def solver_A0_random(m,budget=30_000):
-./benchmark.py:def solver_A1_SA(m,max_iter=300_000):
-./benchmark.py:def solver_A2_backtrack(m):
-./benchmark.py:def solver_A3_v1(m,k=3):
-./benchmark.py:def _build_score(m):
-./benchmark.py:def solver_A4_level_enum(m):
-./benchmark.py:def solver_A5_scipy(m):
-./benchmark.py:def run_benchmark(problems: List[Tuple[int,int]], verbose=True) -> Dict:
-./benchmark.py:def print_summary(all_results, problems):
-./benchmark.py:def w4_benchmark():
-./benchmark.py:def main():
-./domains.py:def proved(s): print(f"  {G_}■ {s}{Z_}")
-./domains.py:def open_(s):  print(f"  {Y_}◆ {s}{Z_}")
-./domains.py:def note(s):   print(f"  {D_}{s}{Z_}")
-./domains.py:def analyse_magic_squares(verbose=True):
-./domains.py:def analyse_pythagorean(verbose=True):
-./domains.py:def _load_magic_pythagorean(engine):
-./domains.py:def build_decomposition_category():
-./domains.py:def load_all_domains(engine) -> None:
-./domains.py:def _load_cycles(engine: Engine) -> None:
-./domains.py:def _load_classical(engine: Engine) -> None:
-./domains.py:def analyse_P5_nonabelian(verbose: bool=True) -> Dict:
-./domains.py:def _load_P5_nonabelian(engine: Engine) -> None:
-./domains.py:def analyse_P6_product_groups(verbose: bool=True) -> List[Dict]:
-./domains.py:def _load_P6_product(engine: Engine) -> None:
+src/theorems.py:def proved(s): print(f"  {G_}■ {s}{Z_}")
+src/theorems.py:def fail(s):   print(f"  {R_}✗ {s}{Z_}")
+src/theorems.py:def note(s):   print(f"  {D_}{s}{Z_}")
+src/theorems.py:def build_proof(m: int, k: int, solution=None) -> Dict:
+src/theorems.py:def verify_all_theorems(verbose: bool=True) -> Dict[str,bool]:
+src/theorems.py:def print_cross_domain_table():
+src/theorems.py:def compute_H1_classes(m: int) -> Dict:
+src/theorems.py:def verify_m4_structure() -> Dict:
+src/theorems.py:def prove_fiber_uniform_k4_impossible(verbose: bool=True) -> bool:
+src/frontiers.py:def found(s): print(f"  {G_}✓ {s}{Z_}")
+src/frontiers.py:def open_(s): print(f"  {Y_}◆ OPEN: {s}{Z_}")
+src/frontiers.py:def note(s):  print(f"  {D_}{s}{Z_}")
+src/frontiers.py:def hr(n=72): return "─"*n
+src/frontiers.py:def solve_P1(max_iter: int=2_000_000, seeds=range(5),
+src/frontiers.py:def solve_P2(max_iter: int=5_000_000, seeds=range(3),
+src/frontiers.py:def solve_P2_warm_start(max_iter=10_000_000, seed=0, verbose=True):
+src/frontiers.py:def solve_P3(max_iter: int=3_000_000, seeds=range(2),
+src/frontiers.py:def verify_m6_depth3_barrier(verbose: bool=True):
+src/frontiers.py:def print_status():
+src/frontiers.py:def main():
+src/core.py:def extract_weights(m: int, k: int) -> Weights:
+src/core.py:def weights_table(m_range=range(2,11), k_range=range(2,7)) -> List[Weights]:
+src/core.py:def verify_sigma(sigma: Dict[Tuple,Tuple], m: int) -> bool:
+src/core.py:def table_to_sigma(table: List[Dict], m: int) -> Dict[Tuple,Tuple]:
+src/core.py:def _level_valid(lv: Dict[int,list], m: int) -> bool:
+src/core.py:def valid_levels(m: int) -> List[Dict]:
+src/core.py:def compose_Q(table: List[Dict], m: int) -> List[Dict]:
+src/core.py:def is_single_cycle(Q: Dict, m: int) -> bool:
+src/core.py:def _build_sa3(m: int):
+src/core.py:def _sa_score(sigma: List[int], arc_s, pa, n: int) -> int:
+src/core.py:def run_sa(m: int, seed: int=0, max_iter: int=5_000_000,
+src/core.py:def solve(m: int, k: int=3, seed: int=42) -> Optional[Dict]:
+src/core.py:def _sa_worker(args):
+src/core.py:def run_parallel_sa(m: int, seeds: List[int], max_iter: int=5_000_000,
+src/benchmark.py:def _build_score(m):
+src/benchmark.py:def solver_v2(m,k=3):
+src/benchmark.py:def solver_A0_random(m,budget=30_000):
+src/benchmark.py:def solver_A1_SA(m,max_iter=300_000):
+src/benchmark.py:def solver_A2_backtrack(m):
+src/benchmark.py:def solver_A3_v1(m,k=3):
+src/benchmark.py:def _build_score(m):
+src/benchmark.py:def solver_A4_level_enum(m):
+src/benchmark.py:def solver_A5_scipy(m):
+src/benchmark.py:def run_benchmark(problems: List[Tuple[int,int]], verbose=True) -> Dict:
+src/benchmark.py:def print_summary(all_results, problems):
+src/benchmark.py:def w4_benchmark():
+src/benchmark.py:def main():
+src/domains.py:def proved(s): print(f"  {G_}■ {s}{Z_}")
+src/domains.py:def open_(s):  print(f"  {Y_}◆ {s}{Z_}")
+src/domains.py:def note(s):   print(f"  {D_}{s}{Z_}")
+src/domains.py:def analyse_magic_squares(verbose=True):
+src/domains.py:def analyse_pythagorean(verbose=True):
+src/domains.py:def _load_magic_pythagorean(engine):
+src/domains.py:def build_decomposition_category():
+src/domains.py:def load_all_domains(engine) -> None:
+src/domains.py:def _load_cycles(engine: Engine) -> None:
+src/domains.py:def _load_classical(engine: Engine) -> None:
+src/domains.py:def analyse_P5_nonabelian(verbose: bool=True) -> Dict:
+src/domains.py:def _load_P5_nonabelian(engine: Engine) -> None:
+src/domains.py:def analyse_P6_product_groups(verbose: bool=True) -> List[Dict]:
+src/domains.py:def _load_P6_product(engine: Engine) -> None:
+main.py:def main():

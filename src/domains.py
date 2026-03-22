@@ -16,7 +16,7 @@ Domains:
 from math import gcd
 from itertools import permutations, product as iprod
 from typing import List, Dict, Tuple, Optional
-from engine import Engine, Domain
+from .engine import Engine, Domain
 
 G_="\033[92m";R_="\033[91m";Y_="\033[93m";W_="\033[97m";D_="\033[2m";Z_="\033[0m"
 def proved(s): print(f"  {G_}■ {s}{Z_}")
@@ -143,7 +143,7 @@ def load_all_domains(engine) -> None:
 # ══════════════════════════════════════════════════════════════════════════════
 
 def _load_cycles(engine: Engine) -> None:
-    from core import PRECOMPUTED, solve
+    from .core import PRECOMPUTED, solve
     for m in [3,4,5,6,7,8,9]:
         sol = PRECOMPUTED.get((m,3))
         tags = ["cycles", "odd" if m%2==1 else "even"]
@@ -301,7 +301,7 @@ def _load_P6_product(engine: Engine) -> None:
 # ══════════════════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
-    from engine import Engine
+    from .engine import Engine
     e = Engine()
     load_all_domains(e)
     print(f"Registered domains: {len(e.registry)}")
