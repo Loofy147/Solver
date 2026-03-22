@@ -97,6 +97,7 @@ class Result:
     status:   Status
     proof:    Dict
     elapsed:  float
+    instance_solution: Any = None
 
     def one_line(self) -> str:
         col = _STATUS_COL[self.status]
@@ -303,7 +304,7 @@ class Engine:
     def register(self, d: Domain) -> "Engine":
         self.registry.register(d); return self
 
-    def run(self, m: int, k: int=3, verbose: bool=False) -> Result:
+    def run(self, m: int, k: int=3, verbose: bool=False, instance_data: Any=None) -> Result:
         key = (m,k)
         if key in self._cache: return self._cache[key]
         t0 = time.perf_counter()
@@ -329,6 +330,7 @@ class Engine:
         r = Result(domain=f"({m},{k})", m=m, k=k, weights=w,
                    solution=sol, status=status, proof=proof,
                    elapsed=time.perf_counter()-t0)
+        r.instance_solution = instance_data
         self._cache[key] = r
         self.tree.add(r)
         return r
