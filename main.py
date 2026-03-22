@@ -7,6 +7,7 @@ from src.export import write_lean_export
 from src.frontiers import print_status, solve_P1, solve_P2, solve_P3, verify_m6_depth3_barrier
 from src.benchmark import run_benchmark, print_summary, w4_benchmark
 from src.core import state_space_reduction, get_canonical_representative, crypto_group_check
+from src.real_world import CryptoSolver, MusicSolver, ProteinSolver
 
 G_="\033[92m";R_="\033[91m";Y_="\033[93m";B_="\033[94m"
 C_="\033[96m";W_="\033[97m";D_="\033[2m";Z_="\033[0m"
@@ -26,6 +27,7 @@ def main():
     parser.add_argument("--inject", action="store_true", help="Test domain injection")
     parser.add_argument("--m6-barrier", action="store_true", help="Verify m=6 depth-3 barrier")
     parser.add_argument("--rl-reduction", type=int, help="Show state-space reduction for m")
+    parser.add_argument("--showcase-real", action="store_true", help="Showcase real-world data solvers")
     parser.add_argument("--crypto-check", type=int, help="Show crypto group hardness for prime p")
 
     if len(sys.argv) == 1:
@@ -50,6 +52,30 @@ def main():
 
     if args.m6_barrier:
         verify_m6_depth3_barrier(verbose=True)
+
+    if args.showcase_real:
+        print(f"\n{W_}REAL-WORLD SYMMETRY CHALLENGE SHOWCASE{Z_}")
+        print("─"*72)
+
+        # 1. Cryptography
+        p = 65537; g = 3; x = 12345; h = pow(g, x, p)
+        print(f"{B_}[Crypto]{Z_} Solving Discrete Log: {g}^x = {h} mod {p}")
+        sol_x = CryptoSolver.solve_discrete_log(g, h, p)
+        print(f"  Result: x = {sol_x} (Expected {x}) {'✓' if sol_x == x else '✗'}")
+
+        # 2. Music
+        notes = [60, 64, 67, 62, 65, 69] # C Maj, D Min
+        print(f"\n{B_}[Music]{Z_} Analyzing Chord Sequence: {notes}")
+        chords = MusicSolver.analyze_chords(notes)
+        for label, original in chords:
+            print(f"  Notes {original} -> {G_}{label}{Z_} (Transposition Orbit)")
+
+        # 3. Biology
+        seq = "HPHPPHPHPH"
+        print(f"\n{B_}[Biology]{Z_} HP Protein Folding: {seq}")
+        res = ProteinSolver.fold_hp(seq)
+        print(f"  Fold Path: {res['path']}")
+        print(f"  {G_}Stability Score: {res['score']}{Z_} (Contacts preserved)")
 
     if args.crypto_check:
         p = args.crypto_check
