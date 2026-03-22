@@ -10,6 +10,26 @@ Derived from Knuth's *Claude's Cycles* (Feb 2026). Converges on a universal fram
 ## Repository
 
 ```
+src/
+  core.py        8 exact weights · parallel SA engine · multi-flip moves
+  engine.py      pipeline · domain registry · branch tree · classifying space
+  theorems.py    10 theorems verified · moduli theorem · cross-domain table
+  domains.py     all domains incl. P5 (non-abelian S_3) + P6 (product groups)
+  frontiers.py   open problem solvers P1/P2/P3 · symmetry seeding
+  benchmark.py   v2.0 vs 6 alternatives · W4 correction · scaling
+main.py          Unified entry point for exploration and verification
+README.md        Project documentation
+```
+src/
+  core.py        8 exact weights · parallel SA engine · multi-flip moves
+  engine.py      pipeline · domain registry · branch tree · classifying space
+  theorems.py    10 theorems verified · moduli theorem · cross-domain table
+  domains.py     all domains incl. P5 (non-abelian S_3) + P6 (product groups)
+  frontiers.py   open problem solvers P1/P2/P3 · symmetry seeding
+  benchmark.py   v2.0 vs 6 alternatives · W4 correction · scaling
+main.py          Unified entry point for exploration and verification
+README.md        Project documentation
+```
 core.py        8 exact weights · verifier · SA engine · hardcoded solutions
 engine.py      pipeline · domain registry · branch tree · classifying space
 theorems.py    9 theorems verified · moduli theorem · cross-domain table
@@ -24,20 +44,19 @@ README.md      this file
 ## Quick Start
 
 ```bash
-# Prove m=4 k=3 impossible in 0.02ms
-python core.py
+# Run the unified explorer (shows status by default)
+python3 main.py
 
-# Run all 9 theorems
-python theorems.py
+# Run all theorem verifications
+python3 main.py --theorems
 
-# Analyse any domain
-python engine.py
+# Run benchmarks
+python3 main.py --benchmark
 
-# Check open problems
-python frontiers.py --status
-
-# Benchmark
-python benchmark.py --quick
+# Run specific problem solvers
+python3 main.py --p1
+python3 main.py --p2
+python3 main.py --p3
 ```
 
 ---
