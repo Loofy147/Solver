@@ -6,7 +6,7 @@ from src.engine import Engine, inject_domain
 from src.export import write_lean_export
 from src.frontiers import print_status, solve_P1, solve_P2, solve_P3, verify_m6_depth3_barrier
 from src.benchmark import run_benchmark, print_summary, w4_benchmark
-from src.core import state_space_reduction, get_canonical_representative
+from src.core import state_space_reduction, get_canonical_representative, crypto_group_check
 
 G_="\033[92m";R_="\033[91m";Y_="\033[93m";B_="\033[94m"
 C_="\033[96m";W_="\033[97m";D_="\033[2m";Z_="\033[0m"
@@ -26,6 +26,7 @@ def main():
     parser.add_argument("--inject", action="store_true", help="Test domain injection")
     parser.add_argument("--m6-barrier", action="store_true", help="Verify m=6 depth-3 barrier")
     parser.add_argument("--rl-reduction", type=int, help="Show state-space reduction for m")
+    parser.add_argument("--crypto-check", type=int, help="Show crypto group hardness for prime p")
 
     if len(sys.argv) == 1:
         print_status()
@@ -49,6 +50,16 @@ def main():
 
     if args.m6_barrier:
         verify_m6_depth3_barrier(verbose=True)
+
+    if args.crypto_check:
+        p = args.crypto_check
+        res = crypto_group_check(p, 2)
+        print(f"\n{W_}CRYPTOGRAPHIC GROUP HARDNESS (Z_p^*) for p={p}{Z_}")
+        print(f"  Group order:       {res['group_order']}")
+        print(f"  Is prime (est):    {res['is_probably_prime']}")
+        print(f"  Number of gens:    {res['num_generators']}")
+        print(f"  {G_}Hardness ratio:     {res['hardness_ratio']:.4f}{Z_}")
+        print(f"  Security property: {C_}Symmetry breaking complexity{Z_}")
 
     if args.rl_reduction:
         m = args.rl_reduction

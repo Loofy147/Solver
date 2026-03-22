@@ -241,6 +241,8 @@ def print_cross_domain_table():
         ("S_3 (non-abelian)",        "S_3",    "Z_2",   "k=2 feasible",    "k=3 obstructed"),
         ("Rotational CNN",          "C4",     "Grid",  "Equivariant",     "None"),
         ("Symmetric Robot Arm",     "D4",     "State", "X/G reduction",   "None"),
+        ("Quantum Stabilizer",     "Pauli",  "Syndrome","Stabilizer",    "None"),
+        ("Modular Exp (RSA)",      "Zn*",    "Zn",     "Hardness",      "None"),
     ]
     hdr=f"  {'Domain':<28} {'G':<8} {'G/H':<7} {'Governing':<20} {'Obstruction'}"
     print(hdr); print('  '+'─'*75)

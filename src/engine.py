@@ -234,6 +234,8 @@ THEOREM_FINGERPRINTS = {
     "Product Law": {"obstruction": "None", "condition": "gcd(m,n)=1"},
     "Equivariance Law": {"obstruction": "None", "condition": "Group Action G on X"},
     "State Collapse": {"obstruction": "None", "condition": "X/G reduction"},
+    "Algebraic Hardness": {"obstruction": "None", "condition": "Exp in Z_p^*"},
+    "Stabilizer Principle": {"obstruction": "None", "condition": "Quantum Error Correction"},
 }
 
 
@@ -405,6 +407,12 @@ class Engine:
             matches.append("Equivariance Law")
         if 'robot' in r.domain.lower() or 'state' in r.domain.lower():
             matches.append("State Collapse")
+
+        # Advanced Domain Laws
+        if "Modular Exp" in r.domain:
+            matches.append("Algebraic Hardness")
+        if "quantum" in r.domain.lower():
+            matches.append("Stabilizer Principle")
         return matches
 
     # ── default domains ────────────────────────────────────────────────────
@@ -422,6 +430,37 @@ class Engine:
         self.registry.register(Domain(
             name="Symmetric Robot Arm", group_order=8, k=2, m=2, phi_desc="Z2 reflection",
             tags=["rl", "robotics"], G="D4", H="Z2", X="StateSpace"))
+
+        # Cryptography / Security Domains
+        self.registry.register(Domain(
+            name="Modular Exp (RSA)", group_order=1024, k=1, m=1024, phi_desc="x^e mod n",
+            tags=["crypto", "hardness"], G="Z_n^*", H="e", X="Z_n"))
+
+        # Quantum Computing Domains
+        self.registry.register(Domain(
+            name="Quantum Stabilizer", group_order=16, k=2, m=4, phi_desc="error syndrome",
+            tags=["quantum", "stabilizer"], G="PauliGroup", H="StabilizerSubgroup", X="Syndromes"))
+
+        # Computational Biology Domains
+        self.registry.register(Domain(
+            name="Protein Folding Lattice", group_order=24, k=3, m=6, phi_desc="icosahedral symmetry",
+            tags=["biology", "lattice"], G="I_h", H="I", X="Foldings"))
+
+        # Music Theory Domains
+        self.registry.register(Domain(
+            name='Chromatic Scale Z_12', group_order=12, k=1, m=4, phi_desc='augmented triads',
+            tags=['music', 'theory'], G='Z_12', H='Z_3', X='Z_4'))
+
+        # Physics & Linguistics Domains
+        self.registry.register(Domain(
+            name='Lattice Gauge QCD', group_order=192, k=4, m=24, phi_desc='plaquette action',
+            tags=['physics', 'lattice'], G='SU(3)_discretized', H='Z_3', X='GluonField'))
+        self.registry.register(Domain(
+            name='Morphological Syncretism', group_order=8, k=1, m=2, phi_desc='person/number merge',
+            tags=['linguistics', 'symmetry'], G='FeatureGroup', H='Z_4', X='Paradigm'))
+
+
+
 
         # Advanced Domains
         self.registry.register(Domain(

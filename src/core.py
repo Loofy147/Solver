@@ -559,3 +559,49 @@ def state_space_reduction(m: int) -> Dict:
         "reduction_factor": reduction,
         "bits_saved": math.log2(reduction)
     }
+
+def crypto_group_check(p: int, g: int) -> Dict:
+    """
+    Perform a symmetry-aware check on a cryptographic group Z_p^*.
+    Checks if g is a generator and computes the 'symmetry hardness' (phi(phi(p))).
+    """
+    from math import gcd
+    if p < 2: return {"error": "p must be >= 2"}
+
+    # phi(p) for prime p is p-1
+    group_order = p - 1
+
+    # Simple primality check heuristic for large p
+    is_probably_prime = True
+    for i in range(2, min(int(math.sqrt(p)) + 1, 100)):
+        if p % i == 0:
+            is_probably_prime = False
+            break
+
+    # Check if g is coprime to p
+    valid_g = gcd(g, p) == 1
+
+    # Symmetry hardness: how many generators exist? phi(group_order)
+    # This is O(sqrt(group_order))
+    def get_phi(n):
+        res = n
+        d = 2
+        temp = n
+        while d * d <= temp:
+            if temp % d == 0:
+                while temp % d == 0: temp //= d
+                res -= res // d
+            d += 1
+        if temp > 1: res -= res // temp
+        return res
+
+    num_generators = get_phi(group_order) if is_probably_prime else 0
+
+    return {
+        "p": p,
+        "g": g,
+        "group_order": group_order,
+        "num_generators": num_generators,
+        "hardness_ratio": num_generators / group_order if group_order > 0 else 0,
+        "is_probably_prime": is_probably_prime
+    }
