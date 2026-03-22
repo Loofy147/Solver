@@ -264,6 +264,56 @@ def solve_P2_warm_start(max_iter=10_000_000, seed=0, verbose=True):
         open_(f"m=6 k=3: best={bs} after {it+1:,} iters ({elapsed:.1f}s)")
     return None
 
+
+def solve_P2_equivariant(max_iter: int=5_000_000, seeds=range(4),
+                          verbose: bool=True) -> Optional[Dict]:
+    """
+    G_6: 216 vertices, symmetry-guided equivariant SA.
+    Flipping Z_2 and Z_3 orbits to escape the depth-3 barrier.
+    """
+    from .core import run_parallel_sa_equivariant
+    m = 6
+    n = m**3
+
+    def dec(v):
+        i, rem = divmod(v, m*m); j, k = divmod(rem, m)
+        return i, j, k
+    def enc(i, j, k): return i*m*m + j*m + k
+
+    orbits = []
+    # Z_2 orbits: (i, j, k) and (i+3, j+3, k+3) mod 6 ?
+    # Actually, G_m is (Z_m)^3. Subgroups of Z_m include Z_2 (if 2|m) and Z_3 (if 3|m).
+    # Let's use coordinate-wise orbits for Z_2 and Z_3.
+    # For Z_2 = {0, 3} in Z_6: orbits are {v, v+3e_i, v+3e_j, v+3e_k...}
+    # A simpler set of orbits: just coordinate-wise shifts.
+
+    # Z_2 orbits in each coordinate
+    for j in range(m):
+        for k in range(m):
+            orbits.append([enc(i, j, k) for i in [0, 3]])
+            orbits.append([enc(i, j, k) for i in [1, 4]])
+            orbits.append([enc(i, j, k) for i in [2, 5]])
+
+    # Z_3 orbits in each coordinate
+    for j in range(m):
+        for k in range(m):
+            orbits.append([enc(i, j, k) for i in [0, 2, 4]])
+            orbits.append([enc(i, j, k) for i in [1, 3, 5]])
+
+    print(f'\n' + '='*72)
+    print(f'P2: m=6, k=3 — Parallel Equivariant SA on G_6')
+    print('—'*72)
+
+    sol, stats_list = run_parallel_sa_equivariant(6, orbits, list(seeds), max_iter=max_iter)
+    best_stats = min(stats_list, key=lambda x: x['best'])
+    best_score = best_stats['best']
+
+    if best_score == 0:
+        print(f'\n\033[92m■ m=6, k=3: SOLVED via equivariant SA! ■\033[0m')
+        return sol
+    print(f'\nm=6, k=3: best={best_score}. Still hard, but moves faster.')
+    return None
+
 def solve_P3(max_iter: int=3_000_000, seeds=range(2),
              verbose: bool=True) -> Optional[Dict]:
     """

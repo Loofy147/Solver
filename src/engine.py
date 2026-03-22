@@ -235,6 +235,45 @@ class ClassifyingSpace:
 # THE ENGINE
 # ══════════════════════════════════════════════════════════════════════════════
 
+
+
+class DomainParser:
+    """Infers SES properties from a mathematical description."""
+    def parse(self, desc: Dict) -> Domain:
+        group = desc.get('group', 'Z_m')
+        action = desc.get('action', 'sum mod m')
+        k = desc.get('k', 3)
+        n = desc.get('n') # Total group order
+
+        # If n is provided (e.g. Z_12 -> n=12), try to find best m
+        if n:
+            divisors = [i for i in range(2, n + 1) if n % i == 0]
+            best_m = None
+            best_w6 = 999.0
+            for m_test in divisors:
+                try:
+                    w = extract_weights(m_test, k)
+                    if w.compression < best_w6:
+                        best_w6 = w.compression
+                        best_m = m_test
+                except: continue
+            m = best_m or divisors[0]
+        else:
+            # Fallback to group name parsing
+            if group.startswith('Z_'):
+                try: m = int(group[2:])
+                except: m = 5
+            else: m = 5
+            n = m**3 # Default to cycles case if not specified
+
+        name = f'{group} {action} k={k}'
+        return Domain(name, n, k, m, action, tags=['injected'])
+
+def inject_domain(desc: Dict) -> Domain:
+    parser = DomainParser()
+    return parser.parse(desc)
+
+
 class Engine:
     """
     The Global Structure Engine.
