@@ -46,6 +46,7 @@ _FIBER_SHIFTS = ((1,0),(0,1),(0,0))   # i-shift, j-shift for arc types 0,1,2
 class Weights:
     m: int; k: int
     h2_blocks:   bool           # W1
+    h3_blocks:   bool           # W9: Secondary obstruction
     r_count:     int            # W2
     canonical:   Optional[tuple]# W3
     h1_exact:    int            # W4 = phi(m)
@@ -66,15 +67,17 @@ class Weights:
         return not self.h2_blocks and self.r_count > 0
 
     def summary(self) -> str:
+        h3 = " H³≠0" if self.h3_blocks else ""
         ok = "H²=0" if not self.h2_blocks else "H²≠0"
-        return (f"({self.m},{self.k}) {ok} r={self.r_count} "
+        return (f"({self.m},{self.k}) {ok}{h3} r={self.r_count} "
                 f"W3={self.canonical} W4=φ={self.h1_exact} "
                 f"W6={self.compression:.4f} → {self.strategy}")
 
 
+
 @lru_cache(maxsize=1024)
 def extract_weights(m: int, k: int) -> Weights:
-    """Extract all 8 weights for problem (m,k). Cached."""
+    """Extract all 9 weights for problem (m,k). Cached."""
     cp = tuple(r for r in range(1, m) if gcd(r, m) == 1)
     phi_m = len(cp)
 
@@ -94,20 +97,25 @@ def extract_weights(m: int, k: int) -> Weights:
     h1 = phi_m
 
     # W5/W6: search compression — O(1)
-    lev = _LEVEL_COUNTS.get(m, phi_m * 6)
-    full_exp   = m**3 * log2(6)
-    search_exp = m * log2(lev) if lev > 0 else 0
-    compression = search_exp / full_exp if full_exp > 0 else 1.0
+    # Estimate size of valid_levels(m) as (3!)^m / 2^m = 3^m
+    # log2(6^m) = m * log2(6). Compressed log2(3^m) = m * log2(3).
+    # W5 = m * log2(levels), W6 = W5 / (m^3 * log2(6))
+    levels = 3**m
+    search_exp = m * math.log2(levels)
+    total_exp  = (m**3) * math.log2(6)
+    compression = search_exp / total_exp
 
-    # W7: solution lower bound — exact for m=3, lb for m≥5
-    # phi(m) × coprime_b(m)^(k-1)  where coprime_b = m^(m-1)·phi(m)
-    coprime_b = m**(m-1) * phi_m
-    sol_lb = phi_m * coprime_b**(k-1) if r_count > 0 else 0
+    # W7: Solution count lower bound — phi(m) * (m^(m-1) * phi(m))^(k-1)
+    coprime_b = (m**(m-1)) * h1
+    sol_lb = h1 * (coprime_b**(k-1))
 
-    # W8: gauge orbit size = m^(m-1)
+    # W8: Orbit size (gauge orbit size) — m^(m-1)
     orbit_size = m**(m-1)
 
-    return Weights(m=m, k=k, h2_blocks=h2, r_count=r_count, canonical=canon,
+    # W9: Secondary obstruction (Fiber-Uniform k=4 Impossibility)
+    h3 = (m == 4 and k == 4) # Known from Theorem 10.1
+
+    return Weights(m=m, k=k, h2_blocks=h2, h3_blocks=h3, r_count=r_count, canonical=canon,
                    h1_exact=h1, search_exp=round(search_exp,3),
                    compression=round(compression,6), sol_lb=sol_lb,
                    orbit_size=orbit_size, coprime_elems=cp)

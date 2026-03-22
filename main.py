@@ -8,6 +8,9 @@ from src.export import write_lean_export
 from src.frontiers import print_status, solve_P1, solve_P2, solve_P3, verify_m6_depth3_barrier
 from src.benchmark import run_benchmark, print_summary, w4_benchmark
 
+G_="\033[92m";R_="\033[91m";Y_="\033[93m";B_="\033[94m"
+C_="\033[96m";W_="\033[97m";D_="\033[2m";Z_="\033[0m"
+
 def main():
     parser = argparse.ArgumentParser(description="Highly Symmetric Systems Explorer")
     parser.add_argument("--theorems", action="store_true", help="Run theorem verification")
@@ -16,7 +19,6 @@ def main():
     parser.add_argument("--p1", action="store_true", help="Run P1 solver (k=4, m=4)")
     parser.add_argument("--p2", action="store_true", help="Run P2 solver (m=6, k=3)")
     parser.add_argument("--p3", action="store_true", help="Run P3 solver (m=8, k=3)")
-
 
     parser.add_argument("--seeds", type=int, default=2, help="Number of seeds for SA")
     parser.add_argument("--max_iter", type=int, default=3000000, help="Max iterations for SA")
@@ -37,6 +39,13 @@ def main():
 
     if args.status:
         print_status()
+        e = Engine()
+        print(f"\n{W_}DOMAIN REGISTRY SUMMARY{Z_}")
+        for d in e.registry.all():
+            r = e.analyse(d.name)
+            th = e.identify_theorem(r)
+            th_str = f" [{G_}{' + '.join(th)}{Z_}]" if th else ""
+            print(f"  {d.name:<30} {r.one_line()}{th_str}")
 
     if args.m6_barrier:
         verify_m6_depth3_barrier(verbose=True)
@@ -53,21 +62,34 @@ def main():
     if args.p2:
         solve_P2(max_iter=3_000_000, seeds=range(2), verbose=True)
 
-
     if args.p2_equivariant:
         solve_P2_equivariant(max_iter=args.max_iter, seeds=range(args.seeds), verbose=True)
 
     if args.inject:
         e = Engine()
-        d = inject_domain({'group': 'Z_12', 'action': 'sum mod 12', 'k': 3})
-        e.register(d)
-        r = e.analyse(d.name, verbose=True)
-        print(f'  {r.one_line()}')
+        d1 = inject_domain({'name': 'Z_12 Crystal', 'group': 'Z_12', 'k': 3, 'action': 'projection to Z_6'})
+        e.register(d1)
+        r1 = e.analyse(d1.name, verbose=True)
+        th1 = e.identify_theorem(r1)
+        print(f'  {r1.one_line()} [{th1[0] if th1 else ""}]')
+
+        d2 = inject_domain({'name': 'Z_11 Lie Orbit', 'group': 'Z_11', 'k': 3})
+        e.register(d2)
+        r2 = e.analyse(d2.name, verbose=True)
+        th2 = e.identify_theorem(r2)
+        print(f'  {r2.one_line()} [{th2[0] if th2 else ""}]')
+
+        d3 = inject_domain({'name': 'k=4 m=4 Crystal', 'group': 'Z_4', 'k': 4, 'm': 4})
+        e.register(d3)
+        r3 = e.analyse(d3.name, verbose=True)
+        th3 = e.identify_theorem(r3)
+        print(f'  {r3.one_line()} [{th3[0] if th3 else ""}]')
 
     if args.export_lean:
         e = Engine()
-        results = [e.run(3,3), e.run(4,3), e.run(5,3)]
+        results = [e.run(3,3), e.run(4,3), e.run(4,4), e.run(5,3)]
         write_lean_export(results, 'proofs.lean')
+
     if args.p3:
         solve_P3(max_iter=2_000_000, seeds=range(2), verbose=True)
 

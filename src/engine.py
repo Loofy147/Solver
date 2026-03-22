@@ -20,6 +20,7 @@ Adding a new domain:
 
 from __future__ import annotations
 import time
+import re
 from math import gcd
 from itertools import product as iprod
 from typing import Any, Dict, List, Optional, Tuple
@@ -64,9 +65,12 @@ class Domain:
     k:           int
     m:           int            # |G/H|, the fiber quotient modulus
     phi_desc:    str            # description of the fiber map φ
+    G:           str            = 'Z_m^3'
+    H:           str            = 'Z_m^2'
+    X:           str            = 'G/H'
     tags:        List[str]      = field(default_factory=list)
     precomputed: Any            = None   # solution if known
-    notes:       str            = ""
+    notes:       str            = ''
 
 
 class DomainRegistry:
@@ -98,37 +102,25 @@ class Result:
         col = _STATUS_COL[self.status]
         sym = _STATUS_SYM[self.status]
         return (f"({self.m},{self.k}) {col}{sym:<22}{Z_} "
-                f"W4={self.weights.h1_exact} W6={self.weights.compression:.4f} "
-                f"{self.elapsed*1000:.1f}ms")
+                f"W4={self.weights.h1_exact} W6={self.weights.compression:.4f} {self.elapsed*1000:.1f}ms")
 
 
-@dataclass
 class BranchNode:
-    domain:   str
-    question: str
-    status:   Status
-    evidence: str
-    children: List[BranchNode] = field(default_factory=list)
-
+    def __init__(self, domain, status, question, evidence):
+        self.domain   = domain
+        self.status   = status
+        self.question = question
+        self.evidence = evidence
+        self.children: List[BranchNode] = []
 
 class BranchTree:
-    def __init__(self): self._roots: List[BranchNode] = []
+    def __init__(self):
+        self._roots: List[BranchNode] = []
 
-    def add(self, result: Result) -> None:
-        root = BranchNode(
-            domain=result.domain,
-            question=f"Does a k={result.k}-Hamiltonian decomposition exist for {result.domain}?",
-            status=result.status,
-            evidence=result.proof.get("theorem",""),
-        )
-        for c_label, c_evidence in [
-            (f"C1 Fiber Map", f"|G|={result.m**3}={result.m}×{result.m**2}"),
-            (f"C2 Twisted Translation", f"Q_c(i,j)=(i+b_c(j),j+r_c)"),
-            (f"C3 Governing Condition", f"W3={result.weights.canonical}"),
-            (f"C4 Parity Obstruction", f"W1={result.weights.h2_blocks}"),
-        ]:
-            root.children.append(BranchNode(result.domain, c_label, result.status, c_evidence))
-        self._roots.append(root)
+    def add(self, r: Result) -> None:
+        # Simple tree: top level is the problem (m,k)
+        node = BranchNode(r.domain, r.status, r.proof["theorem"], r.proof["proof"][0])
+        self._roots.append(node)
 
     def print(self, indent: int=0, nodes: Optional[List]=None) -> None:
         if nodes is None: nodes = self._roots
@@ -232,42 +224,50 @@ class ClassifyingSpace:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# THE ENGINE
+# INVARIANT LEARNING REGISTRY
 # ══════════════════════════════════════════════════════════════════════════════
 
+THEOREM_FINGERPRINTS = {
+    "Parity Law": {"obstruction": "H2", "condition": "Even m, Odd k"},
+    "Existence Law": {"obstruction": "None", "condition": "Odd m"},
+    "Fiber-Uniform Obstruction": {"obstruction": "W9", "condition": "m=4, k=4"},
+    "Product Law": {"obstruction": "None", "condition": "gcd(m,n)=1"},
+}
 
 
 class DomainParser:
     """Infers SES properties from a mathematical description."""
     def parse(self, desc: Dict) -> Domain:
-        group = desc.get('group', 'Z_m')
-        action = desc.get('action', 'sum mod m')
+        name = desc.get('name', 'Anonymous Domain')
+        G_str = desc.get('group', 'Z_m^3')
+        H_str = desc.get('subgroup', 'Z_m^2')
+        X_str = desc.get('set', 'G/H')
         k = desc.get('k', 3)
-        n = desc.get('n') # Total group order
 
-        # If n is provided (e.g. Z_12 -> n=12), try to find best m
-        if n:
-            divisors = [i for i in range(2, n + 1) if n % i == 0]
-            best_m = None
-            best_w6 = 999.0
-            for m_test in divisors:
+        m = desc.get('m')
+        if m is None:
+            if G_str.startswith('Z_'):
                 try:
-                    w = extract_weights(m_test, k)
-                    if w.compression < best_w6:
-                        best_w6 = w.compression
-                        best_m = m_test
-                except: continue
-            m = best_m or divisors[0]
-        else:
-            # Fallback to group name parsing
-            if group.startswith('Z_'):
-                try: m = int(group[2:])
+                    match = re.search(r'\d+', G_str)
+                    g_val = int(match.group()) if match else 5
+                    if '/' in X_str or H_str.startswith('Z_'):
+                        match_h = re.search(r'\d+', H_str)
+                        h_val = int(match_h.group()) if match_h else 1
+                        m = g_val // h_val
+                    else:
+                        m = g_val
                 except: m = 5
             else: m = 5
-            n = m**3 # Default to cycles case if not specified
 
-        name = f'{group} {action} k={k}'
-        return Domain(name, n, k, m, action, tags=['injected'])
+        n = desc.get('n', m**3)
+        phi = desc.get('action', f'projection {G_str} -> Z_{m}')
+
+        tags = desc.get('tags', ['injected'])
+        if 'Lie' in G_str or 'crystal' in name.lower():
+            tags.append('advanced')
+
+        return Domain(name=name, group_order=n, k=k, m=m, phi_desc=phi, G=G_str, H=H_str, X=X_str, tags=tags)
+
 
 def inject_domain(desc: Dict) -> Domain:
     parser = DomainParser()
@@ -380,28 +380,56 @@ class Engine:
 
     def print_results(self) -> None:
         print(f"\n{'═'*72}\n{W_}RESULTS{Z_}\n{'─'*72}")
-        for r in self._cache.values(): print(f"  {r.one_line()}")
+        for r in self._cache.values():
+            th = self.identify_theorem(r)
+            th_str = f" [{G_}{' + '.join(th)}{Z_}]" if th else ""
+            print(f"  {r.one_line()}{th_str}")
+
+    def identify_theorem(self, r: Result) -> List[str]:
+        """
+        Given a result, identify which known theorems it instantiates.
+        """
+        matches = []
+        w = r.weights
+        if w.h2_blocks:
+            matches.append("Parity Law")
+        if w.h3_blocks:
+            matches.append("Fiber-Uniform Obstruction")
+        if not w.h2_blocks and not w.h3_blocks and w.m % 2 == 1:
+            matches.append("Existence Law")
+        return matches
 
     # ── default domains ────────────────────────────────────────────────────
 
     def _load_defaults(self):
+        # Advanced Domains
+        self.registry.register(Domain(
+            name="Cubic Crystal Z_4^3", group_order=64, k=3, m=4, phi_desc="projection to Z_4",
+            tags=["crystal", "3d"], G="Z_4^3", H="Z_4^2", X="Z_4"))
+        self.registry.register(Domain(
+            name="Non-abelian S_3", group_order=6, k=2, m=2, phi_desc="parity map S_3 -> Z_2",
+            tags=["non-abelian", "lie"], G="S_3", H="A_3", X="Z_2"))
+        self.registry.register(Domain(
+            name="Hamming Code (7,4)", group_order=128, k=7, m=8, phi_desc="parity-check matrix",
+            tags=["coding", "perfect"], G="Z_2^7", H="Z_2^4", X="Z_2^3"))
+
         for m,sol,tags in [(3,PRECOMPUTED.get((3,3)),["cycles","odd"]),
                            (4,PRECOMPUTED.get((4,3)),["cycles","even","sa"]),
                            (5,PRECOMPUTED.get((5,3)),["cycles","odd"]),
                            (7,None,["cycles","odd"])]:
             self.registry.register(Domain(
-                f"Cycles m={m} k=3", m**3, 3, m, f"(i+j+k) mod {m}",
-                tags, sol, f"G_{m}"))
+                name=f"Cycles m={m} k=3", group_order=m**3, k=3, m=m, phi_desc=f"(i+j+k) mod {m}",
+                tags=tags, precomputed=sol, notes=f"G_{m}"))
         self.registry.register(Domain(
-            "Cycles m=4 k=4 [OPEN]", 64, 4, 4, "(i+j+k) mod 4",
-            ["cycles","even","k4","frontier"],
+            name="Cycles m=4 k=4 [OPEN]", group_order=64, k=4, m=4, phi_desc="(i+j+k) mod 4",
+            tags=["cycles","even","k4","frontier"],
             notes="r-quad (1,1,1,1). Fiber-uniform impossible (331K checked). Open."))
         self.registry.register(Domain(
-            "Hamming(7,4)", 128, 8, 2, "parity-check Z_2^7→Z_2^3",
-            ["coding","perfect"], notes="Perfect code: ball×|C|=128"))
+            name="Hamming(7,4)", group_order=128, k=8, m=2, phi_desc="parity-check Z_2^7→Z_2^3",
+            tags=["coding","perfect"], notes="Perfect code: ball×|C|=128"))
         self.registry.register(Domain(
-            "Latin Square n=5", 5, 1, 5, "identity",
-            ["latin"], notes="Cyclic L[i][j]=(i+j)%n"))
+            name="Latin Square n=5", group_order=5, k=1, m=5, phi_desc="identity",
+            tags=["latin"], notes="Cyclic L[i][j]=(i+j)%n"))
 
 
 if __name__ == "__main__":
