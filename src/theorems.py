@@ -239,6 +239,8 @@ def print_cross_domain_table():
         ("Diff set (7,3,1)",         "Z_7",    "Z_1",   "k(k-1)=λ(n-1)",   "n≡2(mod4)"),
         ("Z_m×Z_n product",          "Z_m×Z_n","Z_gcd", "gcd(r_c,gcd)=1",  "Same parity law"),
         ("S_3 (non-abelian)",        "S_3",    "Z_2",   "k=2 feasible",    "k=3 obstructed"),
+        ("Rotational CNN",          "C4",     "Grid",  "Equivariant",     "None"),
+        ("Symmetric Robot Arm",     "D4",     "State", "X/G reduction",   "None"),
     ]
     hdr=f"  {'Domain':<28} {'G':<8} {'G/H':<7} {'Governing':<20} {'Obstruction'}"
     print(hdr); print('  '+'─'*75)

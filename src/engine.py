@@ -232,6 +232,8 @@ THEOREM_FINGERPRINTS = {
     "Existence Law": {"obstruction": "None", "condition": "Odd m"},
     "Fiber-Uniform Obstruction": {"obstruction": "W9", "condition": "m=4, k=4"},
     "Product Law": {"obstruction": "None", "condition": "gcd(m,n)=1"},
+    "Equivariance Law": {"obstruction": "None", "condition": "Group Action G on X"},
+    "State Collapse": {"obstruction": "None", "condition": "X/G reduction"},
 }
 
 
@@ -397,11 +399,30 @@ class Engine:
             matches.append("Fiber-Uniform Obstruction")
         if not w.h2_blocks and not w.h3_blocks and w.m % 2 == 1:
             matches.append("Existence Law")
+
+        # AI/RL Laws
+        if any(tag in r.domain.lower() for tag in ['cnn', 'gnn', 'rotation']):
+            matches.append("Equivariance Law")
+        if 'robot' in r.domain.lower() or 'state' in r.domain.lower():
+            matches.append("State Collapse")
         return matches
 
     # ── default domains ────────────────────────────────────────────────────
 
     def _load_defaults(self):
+        # AI / Machine Learning Domains
+        self.registry.register(Domain(
+            name="Rotational CNN", group_order=4, k=1, m=1, phi_desc="C4 rotation",
+            tags=["ai", "equivariance"], G="C4", H="e", X="Grid"))
+        self.registry.register(Domain(
+            name="Permutation GNN", group_order=720, k=1, m=1, phi_desc="S6 permutation",
+            tags=["ai", "invariance"], G="S6", H="e", X="Graph"))
+
+        # RL / Robotics Domains
+        self.registry.register(Domain(
+            name="Symmetric Robot Arm", group_order=8, k=2, m=2, phi_desc="Z2 reflection",
+            tags=["rl", "robotics"], G="D4", H="Z2", X="StateSpace"))
+
         # Advanced Domains
         self.registry.register(Domain(
             name="Cubic Crystal Z_4^3", group_order=64, k=3, m=4, phi_desc="projection to Z_4",

@@ -534,3 +534,28 @@ def run_parallel_sa_equivariant(m: int, orbits: List[List[int]], seeds: List[int
             if sol and not best_sol:
                 best_sol = sol
     return best_sol, all_stats
+
+def get_canonical_representative(state: Tuple, m: int) -> Tuple:
+    """
+    Given a state (i, j, k) in Z_m^3, return its canonical form
+    under the translation group H = Z_m^2.
+
+    The fiber map is phi(i, j, k) = (i + j + k) mod m.
+    Two states are equivalent if they belong to the same fiber.
+    The canonical representative for a fiber s is (s, 0, 0).
+    """
+    s = sum(state) % m
+    return (s, 0, 0)
+
+def state_space_reduction(m: int) -> Dict:
+    """Compute how much the state space collapses under symmetry."""
+    total_states = m**3
+    distinct_states = m # Only one per fiber
+    reduction = total_states / distinct_states
+    return {
+        "m": m,
+        "total": total_states,
+        "distinct": distinct_states,
+        "reduction_factor": reduction,
+        "bits_saved": math.log2(reduction)
+    }
