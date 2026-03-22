@@ -3,9 +3,18 @@
 **Finding global structure in combinatorial problems via the short exact sequence**  
 **0 → H → G → G/H → 0**
 
-Derived from Knuth's *Claude's Cycles* (Feb 2026). Converges on a universal framework governing Cayley digraphs, Latin squares, Hamming codes, magic squares, difference sets, and Pythagorean triples.
+### Why Symmetry Matters in Computing
+These ideas help build systems that are **smarter with less data, faster, and more stable**.
+- **AI/ML:** Better generalization and smaller models via equivariance.
+- **RL:** Faster learning by collapsing the state space.
+- **Systems/DB:** Redundancy elimination and smarter indexing via canonical forms.
+- **Algorithms:** exponential speedups through symmetry-aware search.
+
+*See [SYMMETRY_APPLICATIONS.md](SYMMETRY_APPLICATIONS.md) for full details.*
 
 ---
+
+## Repository
 
 ## Repository
 
