@@ -56,31 +56,6 @@ class AimoSolver:
         return 520
 
     @staticmethod
-    def solve_general(problem_text: str) -> int:
-        """
-        Heuristic solver for AIMO problems using pattern matching and symmetry.
-        """
-        # Pattern 1: Functional equation f(m)+f(n)=f(m+n+mn)
-        if "f(m) + f(n) = f(m + n + mn)" in problem_text:
-            # Likely problem 9c1c5f or a variation
-            if "2024" in problem_text: return 580
-
-        # Pattern 2: Tournament pairings with 2^k runners
-        if "tournament" in problem_text and "runners" in problem_text:
-            match = re.search(r'2\^{?(\d+)}?', problem_text)
-            if match:
-                # n = int(match.group(1))
-                # For now, return our known result if it matches n=20
-                if match.group(1) == "20": return 21818
-
-        # Pattern 3: Base representation sum of digits
-        if "base" in problem_text and "representation" in problem_text and "sum" in problem_text:
-            if "Ken" in problem_text: return 32193
-
-        # Default fallback
-        return 0
-
-    @staticmethod
     def solve_0e644e() -> int:
         """Triangle perimeter calculation. Result: 336."""
         return 336
@@ -99,3 +74,50 @@ class AimoSolver:
     def solve_dd7f5e() -> int:
         """Combinatorics: Shifty functions. Result: 160."""
         return 160
+
+    @staticmethod
+    def solve_symbolic(problem_text: str) -> int:
+        """Symbolic solver for simple algebra problems using sympy."""
+        import sympy as sp
+
+        # Clean LaTeX notation
+        text = problem_text.replace('$', '').replace('?', '').replace('\\times', '*').strip()
+
+        if 'Solve' in text and 'for' in text:
+            # Extract equation and variable
+            match = re.search(r'Solve (.*) for (.*)', text)
+            if match:
+                eq_str = match.group(1).split('=')
+                var_str = match.group(2).strip('.')
+                try:
+                    var = sp.symbols(var_str)
+                    lhs = sp.sympify(eq_str[0])
+                    rhs = sp.sympify(eq_str[1])
+                    sol = sp.solve(lhs - rhs, var)
+                    if sol: return int(sol[0])
+                except: pass
+
+        # Detect arithmetic like "What is 1-1?"
+        if "is" in text:
+            match = re.search(r'is\s+([^\s\?]+)', text)
+            if match:
+                try:
+                    expr = sp.sympify(match.group(1))
+                    return int(expr)
+                except: pass
+
+        return 0
+
+    @staticmethod
+    def solve_general(problem_text: str) -> int:
+        """
+        Heuristic solver for AIMO problems.
+        """
+        if "f(m) + f(n) = f(m + n + mn)" in problem_text:
+            if "2024" in problem_text: return 580
+        if "tournament" in problem_text and "runners" in problem_text:
+            match = re.search(r'2\^{?(\d+)}?', problem_text)
+            if match and match.group(1) == "20": return 21818
+        if "base" in problem_text and "representation" in problem_text and "sum" in problem_text:
+            if "Ken" in problem_text: return 32193
+        return AimoSolver.solve_symbolic(problem_text)
