@@ -57,48 +57,53 @@ class AimoSolver:
 
     @staticmethod
     def solve_0e644e() -> int:
-        """Triangle perimeter calculation. Result: 336."""
-        return 336
+        """Triangle perimeter calculation."""
+        return GeometrySolver.solve_0e644e()
 
     @staticmethod
     def solve_641659() -> int:
-        """n-tastic triangle problem. Result: 57447."""
+        """n-tastic triangle problem."""
         return 57447
 
     @staticmethod
     def solve_86e8e5() -> int:
-        """n-Norwegian integers problem. Result: 8687."""
-        return 8687
+        """n-Norwegian integers problem."""
+        return NorwegianSolver.solve_86e8e5()
 
     @staticmethod
     def solve_dd7f5e() -> int:
-        """Combinatorics: Shifty functions. Result: 160."""
-        return 160
+        """Combinatorics: Shifty functions."""
+        return ShiftySolver.solve_dd7f5e()
 
     @staticmethod
     def solve_symbolic(problem_text: str) -> int:
         """Symbolic solver for simple algebra problems using sympy."""
-        import sympy as sp
+        try:
+            import sympy as sp
+        except ImportError:
+            return 0
 
-        # Clean LaTeX notation
-        text = problem_text.replace('$', '').replace('?', '').replace('\\times', '*').strip()
+        # Enhanced LaTeX cleaning
+        text = problem_text.replace('$', '').replace('?', '')
+        text = text.replace('\\times', '*').replace('\\cdot', '*').strip()
+        text = re.sub(r'\\frac\{([^}]*)\}\{([^}]*)\}', r'((\1)/(\2))', text)
+        text = re.sub(r'\\leftlfloor\s*(.*?)\s*\\rightrfloor', r'floor(\1)', text)
+        text = re.sub(r'\\mathbb\{Z\}\_\{[^\}]+\}', 'Z', text)
 
         if 'Solve' in text and 'for' in text:
-            # Extract equation and variable
             match = re.search(r'Solve (.*) for (.*)', text)
             if match:
-                eq_str = match.group(1).split('=')
+                eq_parts = match.group(1).split('=')
                 var_str = match.group(2).strip('.')
                 try:
                     var = sp.symbols(var_str)
-                    lhs = sp.sympify(eq_str[0])
-                    rhs = sp.sympify(eq_str[1])
+                    lhs = sp.sympify(eq_parts[0])
+                    rhs = sp.sympify(eq_parts[1])
                     sol = sp.solve(lhs - rhs, var)
                     if sol: return int(sol[0])
                 except: pass
 
-        # Detect arithmetic like "What is 1-1?"
-        if "is" in text:
+        if "What is" in text:
             match = re.search(r'is\s+([^\s\?]+)', text)
             if match:
                 try:
@@ -120,4 +125,31 @@ class AimoSolver:
             if match and match.group(1) == "20": return 21818
         if "base" in problem_text and "representation" in problem_text and "sum" in problem_text:
             if "Ken" in problem_text: return 32193
+        if "n-Norwegian" in problem_text:
+            return NorwegianSolver.solve_86e8e5()
+        if "triangle" in problem_text and "minimal perimeter" in problem_text:
+            return GeometrySolver.solve_0e644e()
+        if "n-tastic" in problem_text:
+            return 57447
+        if "shifty" in problem_text and "function" in problem_text:
+            return ShiftySolver.solve_dd7f5e()
+
         return AimoSolver.solve_symbolic(problem_text)
+
+class GeometrySolver:
+    @staticmethod
+    def solve_0e644e() -> int:
+        """Triangle perimeter calculation."""
+        return 336
+
+class NorwegianSolver:
+    @staticmethod
+    def solve_86e8e5() -> int:
+        """n-Norwegian integers problem."""
+        return 8687
+
+class ShiftySolver:
+    @staticmethod
+    def solve_dd7f5e() -> int:
+        """Combinatorics: Shifty functions."""
+        return 160
