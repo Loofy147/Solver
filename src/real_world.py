@@ -90,3 +90,60 @@ class ProteinSolver:
                 break
 
         return {"sequence": sequence, "path": path, "score": sum(1 for p in path)}
+
+class MathSolver:
+    @staticmethod
+    def legendre_valuation(n: int, p: int) -> int:
+        """Computes v_p(n!) using Legendre's formula."""
+        count = 0
+        while n > 0:
+            n //= p
+            count += n
+        return count
+
+    @staticmethod
+    def catalan_valuation(m: int, p: int) -> int:
+        """Computes v_p(Cat(m)) where Cat(m) is the m-th Catalan number."""
+        # Cat(m) = (2m)! / ((m+1)! m!)
+        v = MathSolver.legendre_valuation
+        return v(2*m, p) - v(m, p) - v(m+1, p)
+
+    @staticmethod
+    def sum_divisors_valuation_pow2(p: int, e: int, k: int) -> int:
+        """
+        Computes v_2(sigma_k(p^e)).
+        sigma_k(p^e) = (p^(k(e+1)) - 1) / (p^k - 1)
+        """
+        if p == 2:
+            # sigma_k(2^e) = 1 + 2^k + ... + 2^(ke).
+            # If k > 0 and e > 0, this is 1 + even = odd. v_2 = 0.
+            return 0
+
+        # For odd p, we use Lifting The Exponent Lemma or basic properties.
+        # v_2(p^n - 1) = v_2(p-1) + v_2(p+1) + v_2(n) - 1 for even n.
+        def v2_pow_minus_1(x, n):
+            if n == 0: return 0 # should not happen here
+            # v_2(x^n - 1)
+            v_x_minus_1 = 0
+            tmp = x - 1
+            while tmp > 0 and tmp % 2 == 0:
+                v_x_minus_1 += 1
+                tmp //= 2
+
+            v_x_plus_1 = 0
+            tmp = x + 1
+            while tmp > 0 and tmp % 2 == 0:
+                v_x_plus_1 += 1
+                tmp //= 2
+
+            v_n = 0
+            tmp = n
+            while tmp > 0 and tmp % 2 == 0:
+                v_n += 1
+                tmp //= 2
+
+            return v_x_minus_1 + v_x_plus_1 + v_n - 1
+
+        v_num = v2_pow_minus_1(p, k * (e + 1))
+        v_den = v2_pow_minus_1(p, k)
+        return v_num - v_den

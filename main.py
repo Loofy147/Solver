@@ -14,7 +14,8 @@ from src.export import write_lean_export
 from src.frontiers import print_status, solve_P1, solve_P2, solve_P3, verify_m6_depth3_barrier, solve_P2_equivariant
 from src.benchmark import run_benchmark, print_summary, w4_benchmark
 from src.core import state_space_reduction, get_canonical_representative, crypto_group_check
-from src.real_world import CryptoSolver, MusicSolver, ProteinSolver
+from src.real_world import CryptoSolver, MusicSolver, ProteinSolver, MathSolver
+from src.aimo_solvers import AimoSolver
 
 G_="\033[92m";R_="\033[91m";Y_="\033[93m";B_="\033[94m"
 C_="\033[96m";W_="\033[97m";D_="\033[2m";Z_="\033[0m"
@@ -37,6 +38,7 @@ def main():
     parser.add_argument("--m6-barrier", action="store_true", help="Verify m=6 depth-3 barrier")
     parser.add_argument("--rl-reduction", type=int, help="Show state-space reduction for m")
     parser.add_argument("--showcase-real", action="store_true", help="Showcase real-world data solvers")
+    parser.add_argument("--solve-aimo", action="store_true", help="Solve AIMO competition reference problems")
     parser.add_argument("--crypto-check", type=int, help="Show crypto group hardness for prime p")
 
     if len(sys.argv) == 1:
@@ -67,6 +69,16 @@ def main():
 
     if args.m6_barrier:
         verify_m6_depth3_barrier(verbose=True)
+
+    if args.solve_aimo:
+        print(f"\n{W_}AIMO COMPETITION REFERENCE SOLVER{Z_}")
+        print("─"*72)
+        print(f"{B_}[26de63]{Z_} Sum-of-divisors valuation: v_2(sigma_1024(M^15))")
+        ans1 = AimoSolver.solve_26de63()
+        print(f"  Result: {G_}{ans1}{Z_} (Correct: 32951)")
+        print(f"\n{B_}[424e18]{Z_} Tournament order valuation: v_10(N) mod 10^5")
+        ans2 = AimoSolver.solve_424e18()
+        print(f"  Result: {G_}{ans2}{Z_} (Correct: 21818)")
 
     if args.showcase_real:
         print(f"\n{W_}REAL-WORLD SYMMETRY CHALLENGE SHOWCASE{Z_}")
