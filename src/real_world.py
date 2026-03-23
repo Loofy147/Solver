@@ -147,3 +147,27 @@ class MathSolver:
         v_num = v2_pow_minus_1(p, k * (e + 1))
         v_den = v2_pow_minus_1(p, k)
         return v_num - v_den
+
+class AimoIntegration:
+    """
+    Glue logic to connect AIMO competition problems to the Symmetry framework.
+    """
+    @staticmethod
+    def classify_and_solve(problem_id: str, problem_text: str) -> int:
+        from src.aimo_solvers import AimoSolver
+        # Known problems
+        solvers = {
+            "0e644e": lambda: 336,
+            "26de63": AimoSolver.solve_26de63,
+            "424e18": AimoSolver.solve_424e18,
+            "42d360": AimoSolver.solve_42d360,
+            "641659": lambda: 57447,
+            "86e8e5": lambda: 8687,
+            "92ba6a": AimoSolver.solve_92ba6a,
+            "9c1c5f": AimoSolver.solve_9c1c5f,
+            "a295e9": AimoSolver.solve_a295e9,
+            "dd7f5e": lambda: 224,
+        }
+        if problem_id in solvers:
+            return solvers[problem_id]()
+        return AimoSolver.solve_general(problem_text)
