@@ -2,22 +2,33 @@ import os
 import subprocess
 import sys
 
-# Try to handle CUDA incompatibility for P100 (sm_60)
-try:
-    import torch
-    if torch.cuda.is_available():
-        major, minor = torch.cuda.get_device_capability(0)
-        if major < 7:
-            print(f"Warning: GPU capability {major}.{minor} (P100?) detected.")
-            print("Attempting to install compatible torch...")
-            # P100 needs a torch version that supports sm_60.
-            # Usually, standard torch from pip DOES support it, but the one in the Kaggle 'Latest' might be restricted.
-            # Let's try to force a standard install.
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "torch==2.5.1", "--index-url", "https://download.pytorch.org/whl/cu121"])
-            import importlib
-            importlib.reload(torch)
-except Exception as e:
-    print(f"CUDA check failed: {e}")
+# Aggressively fix the environment for P100 (sm_60) compatibility
+def fix_environment():
+    print("Checking for GPU and compatibility...")
+    try:
+        import torch
+        if torch.cuda.is_available():
+            major, minor = torch.cuda.get_device_capability(0)
+            print(f"Detected GPU: {torch.cuda.get_device_name(0)} (Capability {major}.{minor})")
+            if major < 7:
+                print("Architecture sm_60 (P100) detected. Standard Kaggle torch may be incompatible.")
+                print("Re-installing torch with sm_60 support (cu118)...")
+                # Uninstall existing torch components to avoid TORCH_LIBRARY conflicts
+                subprocess.check_call([sys.executable, "-m", "pip", "uninstall", "-y", "torch", "torchvision", "torchaudio", "triton"])
+                # Install a version known to support sm_60
+                subprocess.check_call([sys.executable, "-m", "pip", "install", "torch==2.4.0+cu118", "--index-url", "https://download.pytorch.org/whl/cu118"])
+                print("Installation complete. Restarting process logic...")
+                return True
+        else:
+            print("No GPU detected.")
+    except Exception as e:
+        print(f"Environment check/fix failed: {e}")
+    return False
+
+# If we re-installed, we might need to be careful about the current process state.
+# However, in a Kaggle script, we can just proceed and hope the dynamic loader picks up the new libs.
+# If not, we'd need to os.execv, but let's try direct import first.
+fix_environment()
 
 import torch
 import math
@@ -30,13 +41,24 @@ class GPUSolver:
         self.m = m
         self.n = m**3
         self.device = device
-        arc_s = torch.zeros((self.n, 3), dtype=torch.long, device=device)
+        print(f"Initializing GPUSolver on {device}")
+
+        # Test basic allocation
+        try:
+            test = torch.zeros(1, device=device)
+            print("Basic GPU allocation successful.")
+        except Exception as e:
+            print(f"GPU allocation failed: {e}")
+            self.device = 'cpu'
+            device = 'cpu'
+
+        self.arc_s = torch.zeros((self.n, 3), dtype=torch.long, device=device)
         for idx in range(self.n):
             i, rem = divmod(idx, m*m); j, k = divmod(rem, m)
-            arc_s[idx, 0] = ((i + 1) % m) * m * m + j * m + k
-            arc_s[idx, 1] = i * m * m + ((j + 1) % m) * m + k
-            arc_s[idx, 2] = i * m * m + j * m + (k + 1) % m
-        self.arc_s = arc_s
+            self.arc_s[idx, 0] = ((i + 1) % m) * m * m + j * m + k
+            self.arc_s[idx, 1] = i * m * m + ((j + 1) % m) * m + k
+            self.arc_s[idx, 2] = i * m * m + j * m + (k + 1) % m
+
         self._ALL_P3 = list(permutations(range(3)))
         pa = torch.zeros((6, 3), dtype=torch.long, device=device)
         for pi, p in enumerate(self._ALL_P3):
@@ -49,11 +71,14 @@ class GPUSolver:
         total_score = torch.zeros(num_chains, device=self.device)
         arc_s_exp = self.arc_s.unsqueeze(0).expand(num_chains, -1, -1)
         base_labels = torch.arange(self.n, device=self.device).unsqueeze(0).expand(num_chains, -1)
+
         for c in range(3):
             at = self.pa[sigma, c]
             f = torch.gather(arc_s_exp, 2, at.unsqueeze(2)).squeeze(2)
-            labels = base_labels.clone(); jump = f
+            labels = base_labels.clone()
+            jump = f
             for _ in range(math.ceil(math.log2(self.n)) + 1):
+                # Use amin for min-label propagation
                 labels = labels.scatter_reduce(1, jump, labels, reduce='amin', include_self=True)
                 jump = torch.gather(jump, 1, jump)
             starts = (labels == base_labels)
@@ -119,10 +144,5 @@ def solve_m8():
     else: print(f"Failed to solve m=8. Best score: {best_score}")
 
 if __name__ == "__main__":
-    if torch.cuda.is_available():
-        print(f"Device: {torch.cuda.get_device_name(0)}")
-        print(f"Capability: {torch.cuda.get_device_capability(0)}")
-    else:
-        print("Device: CPU")
     solve_m6()
     solve_m8()
