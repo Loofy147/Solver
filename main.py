@@ -73,12 +73,21 @@ def main():
     if args.solve_aimo:
         print(f"\n{W_}AIMO COMPETITION REFERENCE SOLVER{Z_}")
         print("─"*72)
-        print(f"{B_}[26de63]{Z_} Sum-of-divisors valuation: v_2(sigma_1024(M^15))")
-        ans1 = AimoSolver.solve_26de63()
-        print(f"  Result: {G_}{ans1}{Z_} (Correct: 32951)")
-        print(f"\n{B_}[424e18]{Z_} Tournament order valuation: v_10(N) mod 10^5")
-        ans2 = AimoSolver.solve_424e18()
-        print(f"  Result: {G_}{ans2}{Z_} (Correct: 21818)")
+
+        problems = [
+            ("26de63", "Sum-of-divisors valuation: v_2(sigma_1024(M^15))", AimoSolver.solve_26de63, 32951),
+            ("424e18", "Tournament order valuation: v_10(N) mod 10^5", AimoSolver.solve_424e18, 21818),
+            ("92ba6a", "Alice and Bob sweets and ages", AimoSolver.solve_92ba6a, 50),
+            ("42d360", "Ken's base representation moves", AimoSolver.solve_42d360, 32193),
+            ("9c1c5f", "Functional equation f(m)+f(n)=f(m+n+mn)", AimoSolver.solve_9c1c5f, 580),
+            ("a295e9", "Square tiling with distinct perimeters", AimoSolver.solve_a295e9, 520),
+        ]
+
+        for pid, desc, solver, expected in problems:
+            print(f"{B_}[{pid}]{Z_} {desc}")
+            ans = solver()
+            print(f"  Result: {G_}{ans}{Z_} (Correct: {expected})")
+            print()
 
     if args.showcase_real:
         print(f"\n{W_}REAL-WORLD SYMMETRY CHALLENGE SHOWCASE{Z_}")
