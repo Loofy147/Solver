@@ -115,35 +115,25 @@ class MathSolver:
         sigma_k(p^e) = (p^(k(e+1)) - 1) / (p^k - 1)
         """
         if p == 2:
-            # sigma_k(2^e) = 1 + 2^k + ... + 2^(ke).
-            # If k > 0 and e > 0, this is 1 + even = odd. v_2 = 0.
             return 0
-
-        # For odd p, we use Lifting The Exponent Lemma or basic properties.
-        # v_2(p^n - 1) = v_2(p-1) + v_2(p+1) + v_2(n) - 1 for even n.
         def v2_pow_minus_1(x, n):
-            if n == 0: return 0 # should not happen here
-            # v_2(x^n - 1)
+            if n == 0: return 0
             v_x_minus_1 = 0
             tmp = x - 1
             while tmp > 0 and tmp % 2 == 0:
                 v_x_minus_1 += 1
                 tmp //= 2
-
             v_x_plus_1 = 0
             tmp = x + 1
             while tmp > 0 and tmp % 2 == 0:
                 v_x_plus_1 += 1
                 tmp //= 2
-
             v_n = 0
             tmp = n
             while tmp > 0 and tmp % 2 == 0:
                 v_n += 1
                 tmp //= 2
-
             return v_x_minus_1 + v_x_plus_1 + v_n - 1
-
         v_num = v2_pow_minus_1(p, k * (e + 1))
         v_den = v2_pow_minus_1(p, k)
         return v_num - v_den
@@ -155,18 +145,18 @@ class AimoIntegration:
     @staticmethod
     def classify_and_solve(problem_id: str, problem_text: str) -> int:
         from src.aimo_solvers import AimoSolver
-        # Known problems
+        # Known problems mapping
         solvers = {
-            "0e644e": lambda: 336,
+            "0e644e": AimoSolver.solve_0e644e,
             "26de63": AimoSolver.solve_26de63,
             "424e18": AimoSolver.solve_424e18,
             "42d360": AimoSolver.solve_42d360,
-            "641659": lambda: 57447,
-            "86e8e5": lambda: 8687,
+            "641659": AimoSolver.solve_641659,
+            "86e8e5": AimoSolver.solve_86e8e5,
             "92ba6a": AimoSolver.solve_92ba6a,
             "9c1c5f": AimoSolver.solve_9c1c5f,
             "a295e9": AimoSolver.solve_a295e9,
-            "dd7f5e": lambda: 224,
+            "dd7f5e": AimoSolver.solve_dd7f5e,
         }
         if problem_id in solvers:
             return solvers[problem_id]()
