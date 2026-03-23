@@ -1,0 +1,155 @@
+[{"stream_name":"stdout","time":1.8423632680000002,"data":"Checking for GPU compatibility...\n"}
+,{"stream_name":"stderr","time":12.728672925,"data":"/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: \n"}
+,{"stream_name":"stderr","time":12.72871678,"data":"    Found GPU0 Tesla P100-PCIE-16GB which is of cuda capability 6.0.\n"}
+,{"stream_name":"stderr","time":12.728723786,"data":"    Minimum and Maximum cuda capability supported by this version of PyTorch is\n"}
+,{"stream_name":"stderr","time":12.728728624,"data":"    (7.0) - (12.0)\n"}
+,{"stream_name":"stderr","time":12.728733294,"data":"    \n"}
+,{"stream_name":"stderr","time":12.728737675,"data":"  queued_call()\n"}
+,{"stream_name":"stderr","time":12.728742052,"data":"/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: \n"}
+,{"stream_name":"stderr","time":12.728748652,"data":"    Please install PyTorch with a following CUDA\n"}
+,{"stream_name":"stderr","time":12.728752559,"data":"    configurations:  12.6 following instructions at\n"}
+,{"stream_name":"stderr","time":12.728755594999999,"data":"    https://pytorch.org/get-started/locally/\n"}
+,{"stream_name":"stderr","time":12.728758612,"data":"    \n"}
+,{"stream_name":"stderr","time":12.72876154,"data":"  queued_call()\n"}
+,{"stream_name":"stderr","time":12.72888042,"data":"/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: \n"}
+,{"stream_name":"stderr","time":12.728889194,"data":"Tesla P100-PCIE-16GB with CUDA capability sm_60 is not compatible with the current PyTorch installation.\n"}
+,{"stream_name":"stderr","time":12.728894015,"data":"The current PyTorch install supports CUDA capabilities sm_70 sm_75 sm_80 sm_86 sm_90 sm_100 sm_120.\n"}
+,{"stream_name":"stderr","time":12.728898727,"data":"If you want to use the Tesla P100-PCIE-16GB GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/\n"}
+,{"stream_name":"stderr","time":12.72890425,"data":"\n"}
+,{"stream_name":"stderr","time":12.728909395,"data":"  queued_call()\n"}
+,{"stream_name":"stdout","time":12.730818592,"data":"Architecture sm_60 (P100) detected. Fixing environment...\n"}
+,{"stream_name":"stdout","time":15.744546944,"data":"Found existing installation: torch 2.10.0+cu128\n"}
+,{"stream_name":"stdout","time":16.91740698,"data":"Uninstalling torch-2.10.0+cu128:\n"}
+,{"stream_name":"stdout","time":45.915006449,"data":"  Successfully uninstalled torch-2.10.0+cu128\n"}
+,{"stream_name":"stdout","time":46.662081995,"data":"Found existing installation: torchvision 0.25.0+cu128\n"}
+,{"stream_name":"stdout","time":46.696843673000004,"data":"Uninstalling torchvision-0.25.0+cu128:\n"}
+,{"stream_name":"stdout","time":47.109167141,"data":"  Successfully uninstalled torchvision-0.25.0+cu128\n"}
+,{"stream_name":"stdout","time":47.361922502,"data":"Found existing installation: torchaudio 2.10.0+cu128\n"}
+,{"stream_name":"stdout","time":47.391764158,"data":"Uninstalling torchaudio-2.10.0+cu128:\n"}
+,{"stream_name":"stdout","time":47.574040859,"data":"  Successfully uninstalled torchaudio-2.10.0+cu128\n"}
+,{"stream_name":"stdout","time":47.824129537,"data":"Found existing installation: triton 3.6.0\n"}
+,{"stream_name":"stdout","time":47.906309514,"data":"Uninstalling triton-3.6.0:\n"}
+,{"stream_name":"stdout","time":52.873506674,"data":"  Successfully uninstalled triton-3.6.0\n"}
+,{"stream_name":"stdout","time":54.464108904,"data":"Looking in indexes: https://download.pytorch.org/whl/cu118\n"}
+,{"stream_name":"stdout","time":54.942025166,"data":"Collecting torch==2.3.1+cu118\n"}
+,{"stream_name":"stdout","time":54.960859198,"data":"  Downloading https://download.pytorch.org/whl/cu118/torch-2.3.1%2Bcu118-cp312-cp312-linux_x86_64.whl (839.6 MB)\n"}
+,{"stream_name":"stdout","time":65.020915374,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 839.6/839.6 MB 2.1 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":67.644995006,"data":"Requirement already satisfied: filelock in /usr/local/lib/python3.12/dist-packages (from torch==2.3.1+cu118) (3.24.3)\n"}
+,{"stream_name":"stdout","time":67.646256952,"data":"Requirement already satisfied: typing-extensions\u003e=4.8.0 in /usr/local/lib/python3.12/dist-packages (from torch==2.3.1+cu118) (4.15.0)\n"}
+,{"stream_name":"stdout","time":67.647925491,"data":"Requirement already satisfied: sympy in /usr/local/lib/python3.12/dist-packages (from torch==2.3.1+cu118) (1.14.0)\n"}
+,{"stream_name":"stdout","time":67.649275479,"data":"Requirement already satisfied: networkx in /usr/local/lib/python3.12/dist-packages (from torch==2.3.1+cu118) (3.6.1)\n"}
+,{"stream_name":"stdout","time":67.650227161,"data":"Requirement already satisfied: jinja2 in /usr/local/lib/python3.12/dist-packages (from torch==2.3.1+cu118) (3.1.6)\n"}
+,{"stream_name":"stdout","time":67.651928949,"data":"Requirement already satisfied: fsspec in /usr/local/lib/python3.12/dist-packages (from torch==2.3.1+cu118) (2026.2.0)\n"}
+,{"stream_name":"stdout","time":67.960614344,"data":"Collecting nvidia-cuda-nvrtc-cu11==11.8.89 (from torch==2.3.1+cu118)\n"}
+,{"stream_name":"stdout","time":67.971381968,"data":"  Downloading https://download.pytorch.org/whl/cu118/nvidia_cuda_nvrtc_cu11-11.8.89-py3-none-manylinux1_x86_64.whl (23.2 MB)\n"}
+,{"stream_name":"stdout","time":70.714207172,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 23.2/23.2 MB 3.8 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":71.077292834,"data":"Collecting nvidia-cuda-runtime-cu11==11.8.89 (from torch==2.3.1+cu118)\n"}
+,{"stream_name":"stdout","time":71.089349243,"data":"  Downloading https://download.pytorch.org/whl/cu118/nvidia_cuda_runtime_cu11-11.8.89-py3-none-manylinux1_x86_64.whl (875 kB)\n"}
+,{"stream_name":"stdout","time":71.111156249,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 875.6/875.6 kB 44.8 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":71.416022415,"data":"Collecting nvidia-cuda-cupti-cu11==11.8.87 (from torch==2.3.1+cu118)\n"}
+,{"stream_name":"stdout","time":71.427426661,"data":"  Downloading https://download.pytorch.org/whl/cu118/nvidia_cuda_cupti_cu11-11.8.87-py3-none-manylinux1_x86_64.whl (13.1 MB)\n"}
+,{"stream_name":"stdout","time":71.544580491,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.1/13.1 MB 101.2 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":71.710952803,"data":"Collecting nvidia-cudnn-cu11==8.7.0.84 (from torch==2.3.1+cu118)\n"}
+,{"stream_name":"stdout","time":71.724996731,"data":"  Downloading https://download.pytorch.org/whl/cu118/nvidia_cudnn_cu11-8.7.0.84-py3-none-manylinux1_x86_64.whl (728.5 MB)\n"}
+,{"stream_name":"stdout","time":80.482412095,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 728.5/728.5 MB 2.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":82.948645262,"data":"Collecting nvidia-cublas-cu11==11.11.3.6 (from torch==2.3.1+cu118)\n"}
+,{"stream_name":"stdout","time":82.958573336,"data":"  Downloading https://download.pytorch.org/whl/cu118/nvidia_cublas_cu11-11.11.3.6-py3-none-manylinux1_x86_64.whl (417.9 MB)\n"}
+,{"stream_name":"stdout","time":90.413031933,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 417.9/417.9 MB 2.1 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":91.927264386,"data":"Collecting nvidia-cufft-cu11==10.9.0.58 (from torch==2.3.1+cu118)\n"}
+,{"stream_name":"stdout","time":91.93951024,"data":"  Downloading https://download.pytorch.org/whl/cu118/nvidia_cufft_cu11-10.9.0.58-py3-none-manylinux1_x86_64.whl (168.4 MB)\n"}
+,{"stream_name":"stdout","time":93.763032066,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.4/168.4 MB 10.9 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":94.38142166,"data":"Collecting nvidia-curand-cu11==10.3.0.86 (from torch==2.3.1+cu118)\n"}
+,{"stream_name":"stdout","time":94.393600852,"data":"  Downloading https://download.pytorch.org/whl/cu118/nvidia_curand_cu11-10.3.0.86-py3-none-manylinux1_x86_64.whl (58.1 MB)\n"}
+,{"stream_name":"stdout","time":94.923894288,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.1/58.1 MB 33.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":95.400588528,"data":"Collecting nvidia-cusolver-cu11==11.4.1.48 (from torch==2.3.1+cu118)\n"}
+,{"stream_name":"stdout","time":95.411745677,"data":"  Downloading https://download.pytorch.org/whl/cu118/nvidia_cusolver_cu11-11.4.1.48-py3-none-manylinux1_x86_64.whl (128.2 MB)\n"}
+,{"stream_name":"stdout","time":97.034218432,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 128.2/128.2 MB 14.4 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":97.712486716,"data":"Collecting nvidia-cusparse-cu11==11.7.5.86 (from torch==2.3.1+cu118)\n"}
+,{"stream_name":"stdout","time":97.725738282,"data":"  Downloading https://download.pytorch.org/whl/cu118/nvidia_cusparse_cu11-11.7.5.86-py3-none-manylinux1_x86_64.whl (204.1 MB)\n"}
+,{"stream_name":"stdout","time":100.273861253,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 204.1/204.1 MB 8.9 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":101.174678761,"data":"Collecting nvidia-nccl-cu11==2.20.5 (from torch==2.3.1+cu118)\n"}
+,{"stream_name":"stdout","time":101.187612281,"data":"  Downloading https://download.pytorch.org/whl/cu118/nvidia_nccl_cu11-2.20.5-py3-none-manylinux2014_x86_64.whl (142.9 MB)\n"}
+,{"stream_name":"stdout","time":102.962738696,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 142.9/142.9 MB 13.2 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":103.511645946,"data":"Collecting nvidia-nvtx-cu11==11.8.86 (from torch==2.3.1+cu118)\n"}
+,{"stream_name":"stdout","time":103.521847222,"data":"  Downloading https://download.pytorch.org/whl/cu118/nvidia_nvtx_cu11-11.8.86-py3-none-manylinux1_x86_64.whl (99 kB)\n"}
+,{"stream_name":"stdout","time":103.537682081,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 99.1/99.1 kB 6.7 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":103.557795695,"data":"Requirement already satisfied: MarkupSafe\u003e=2.0 in /usr/local/lib/python3.12/dist-packages (from jinja2-\u003etorch==2.3.1+cu118) (3.0.3)\n"}
+,{"stream_name":"stdout","time":103.564799915,"data":"Requirement already satisfied: mpmath\u003c1.4,\u003e=1.1.0 in /usr/local/lib/python3.12/dist-packages (from sympy-\u003etorch==2.3.1+cu118) (1.3.0)\n"}
+,{"stream_name":"stdout","time":105.615910595,"data":"Installing collected packages: nvidia-nvtx-cu11, nvidia-nccl-cu11, nvidia-cusparse-cu11, nvidia-curand-cu11, nvidia-cufft-cu11, nvidia-cuda-runtime-cu11, nvidia-cuda-nvrtc-cu11, nvidia-cuda-cupti-cu11, nvidia-cublas-cu11, nvidia-cusolver-cu11, nvidia-cudnn-cu11, torch\n"}
+,{"stream_name":"stderr","time":161.893701396,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":161.893753953,"data":"easyocr 1.7.2 requires torchvision\u003e=0.5, which is not installed.\n"}
+,{"stream_name":"stderr","time":161.893761016,"data":"fastai 2.8.7 requires torchvision\u003e=0.11, which is not installed.\n"}
+,{"stream_name":"stderr","time":161.893766796,"data":"timm 1.0.25 requires torchvision, which is not installed.\n"}
+,{"stream_name":"stdout","time":161.893954883,"data":"Successfully installed nvidia-cublas-cu11-11.11.3.6 nvidia-cuda-cupti-cu11-11.8.87 nvidia-cuda-nvrtc-cu11-11.8.89 nvidia-cuda-runtime-cu11-11.8.89 nvidia-cudnn-cu11-8.7.0.84 nvidia-cufft-cu11-10.9.0.58 nvidia-curand-cu11-10.3.0.86 nvidia-cusolver-cu11-11.4.1.48 nvidia-cusparse-cu11-11.7.5.86 nvidia-nccl-cu11-2.20.5 nvidia-nvtx-cu11-11.8.86 torch-2.3.1+cu118\n"}
+,{"stream_name":"stdout","time":162.401341169,"data":"Environment fixed. Restarting process...\n"}
+,{"stream_name":"stdout","time":859.303838347,"data":"Initializing GPUSolver(m=6) on cuda\n"}
+,{"stream_name":"stdout","time":859.303900214,"data":"\n"}
+,{"stream_name":"stdout","time":859.303907186,"data":"Starting m=6 breakthrough search...\n"}
+,{"stream_name":"stdout","time":859.303912007,"data":"Iter      0 | T: 2.9999 | Best: 186.0 | Avg: 218.9 | 0.1s\n"}
+,{"stream_name":"stdout","time":859.303919209,"data":"Iter   5000 | T: 2.6252 | Best: 149.0 | Avg: 191.0 | 12.0s\n"}
+,{"stream_name":"stdout","time":859.303922935,"data":"Iter  10000 | T: 2.2972 | Best: 148.0 | Avg: 186.4 | 23.8s\n"}
+,{"stream_name":"stdout","time":859.303926562,"data":"Iter  15000 | T: 2.0103 | Best: 142.0 | Avg: 181.5 | 35.6s\n"}
+,{"stream_name":"stdout","time":859.303932687,"data":"Iter  20000 | T: 1.7591 | Best: 139.0 | Avg: 175.9 | 47.3s\n"}
+,{"stream_name":"stdout","time":859.303937811,"data":"Iter  25000 | T: 1.5394 | Best: 127.0 | Avg: 169.7 | 59.1s\n"}
+,{"stream_name":"stdout","time":859.303943467,"data":"Iter  30000 | T: 1.3471 | Best: 125.0 | Avg: 162.4 | 70.8s\n"}
+,{"stream_name":"stdout","time":859.303947843,"data":"Iter  35000 | T: 1.1788 | Best: 120.0 | Avg: 154.4 | 82.5s\n"}
+,{"stream_name":"stdout","time":859.303952674,"data":"Iter  40000 | T: 1.0316 | Best: 110.0 | Avg: 144.6 | 94.3s\n"}
+,{"stream_name":"stdout","time":859.303958343,"data":"Iter  45000 | T: 0.9027 | Best: 101.0 | Avg: 133.8 | 106.0s\n"}
+,{"stream_name":"stdout","time":859.303965922,"data":"Iter  50000 | T: 0.7899 | Best: 86.0 | Avg: 122.0 | 117.7s\n"}
+,{"stream_name":"stdout","time":859.303970432,"data":"Iter  55000 | T: 0.6913 | Best: 70.0 | Avg: 107.8 | 129.5s\n"}
+,{"stream_name":"stdout","time":859.303974882,"data":"Iter  60000 | T: 0.6049 | Best: 58.0 | Avg: 92.6 | 141.2s\n"}
+,{"stream_name":"stdout","time":859.303979367,"data":"Iter  65000 | T: 0.5293 | Best: 51.0 | Avg: 77.6 | 152.8s\n"}
+,{"stream_name":"stdout","time":859.303984235,"data":"Iter  70000 | T: 0.4632 | Best: 33.0 | Avg: 62.0 | 164.5s\n"}
+,{"stream_name":"stdout","time":859.303989402,"data":"Iter  75000 | T: 0.4053 | Best: 26.0 | Avg: 49.2 | 176.2s\n"}
+,{"stream_name":"stdout","time":859.303993893,"data":"Iter  80000 | T: 0.3547 | Best: 22.0 | Avg: 39.1 | 187.9s\n"}
+,{"stream_name":"stdout","time":859.303998337,"data":"Iter  85000 | T: 0.3104 | Best: 16.0 | Avg: 32.6 | 199.6s\n"}
+,{"stream_name":"stdout","time":859.304002673,"data":"Iter  90000 | T: 0.2716 | Best: 14.0 | Avg: 28.3 | 211.3s\n"}
+,{"stream_name":"stdout","time":859.304045412,"data":"Iter  95000 | T: 0.2377 | Best: 13.0 | Avg: 25.6 | 223.0s\n"}
+,{"stream_name":"stdout","time":859.304049927,"data":"Iter 100000 | T: 0.2080 | Best: 11.0 | Avg: 24.0 | 234.6s\n"}
+,{"stream_name":"stdout","time":859.304053324,"data":"Iter 105000 | T: 0.1820 | Best: 11.0 | Avg: 22.8 | 246.1s\n"}
+,{"stream_name":"stdout","time":859.304056713,"data":"Iter 110000 | T: 0.1593 | Best: 11.0 | Avg: 22.0 | 257.7s\n"}
+,{"stream_name":"stdout","time":859.304060423,"data":"Iter 115000 | T: 0.1394 | Best: 11.0 | Avg: 21.5 | 269.2s\n"}
+,{"stream_name":"stdout","time":859.304064306,"data":"Iter 120000 | T: 0.1220 | Best: 11.0 | Avg: 21.2 | 280.8s\n"}
+,{"stream_name":"stdout","time":859.304067832,"data":"Iter 125000 | T: 0.1067 | Best: 11.0 | Avg: 20.9 | 292.3s\n"}
+,{"stream_name":"stdout","time":859.304071425,"data":"Iter 130000 | T: 0.0934 | Best: 11.0 | Avg: 20.7 | 303.9s\n"}
+,{"stream_name":"stdout","time":859.304075133,"data":"Iter 135000 | T: 0.0817 | Best: 11.0 | Avg: 20.6 | 315.3s\n"}
+,{"stream_name":"stdout","time":859.304078773,"data":"Iter 140000 | T: 0.0715 | Best: 11.0 | Avg: 20.5 | 326.8s\n"}
+,{"stream_name":"stdout","time":859.304082445,"data":"Iter 145000 | T: 0.0626 | Best: 11.0 | Avg: 20.4 | 338.4s\n"}
+,{"stream_name":"stdout","time":859.304085922,"data":"Iter 150000 | T: 0.0548 | Best: 11.0 | Avg: 20.3 | 350.0s\n"}
+,{"stream_name":"stdout","time":859.304089407,"data":"Iter 155000 | T: 0.0479 | Best: 11.0 | Avg: 20.2 | 361.5s\n"}
+,{"stream_name":"stdout","time":859.304092957,"data":"Iter 160000 | T: 0.0419 | Best: 11.0 | Avg: 20.2 | 373.1s\n"}
+,{"stream_name":"stdout","time":859.304098506,"data":"Iter 165000 | T: 0.0367 | Best: 10.0 | Avg: 20.1 | 384.6s\n"}
+,{"stream_name":"stdout","time":859.304102099,"data":"Iter 170000 | T: 0.0321 | Best: 10.0 | Avg: 20.1 | 396.1s\n"}
+,{"stream_name":"stdout","time":859.304105676,"data":"Iter 175000 | T: 0.0281 | Best: 10.0 | Avg: 20.1 | 407.6s\n"}
+,{"stream_name":"stdout","time":859.304109621,"data":"Iter 180000 | T: 0.0246 | Best: 10.0 | Avg: 20.0 | 419.1s\n"}
+,{"stream_name":"stdout","time":859.304113225,"data":"Iter 185000 | T: 0.0215 | Best: 10.0 | Avg: 20.0 | 430.6s\n"}
+,{"stream_name":"stdout","time":859.304116902,"data":"Iter 190000 | T: 0.0188 | Best: 10.0 | Avg: 20.0 | 442.1s\n"}
+,{"stream_name":"stdout","time":859.304120778,"data":"Iter 195000 | T: 0.0165 | Best: 10.0 | Avg: 19.9 | 453.6s\n"}
+,{"stream_name":"stdout","time":859.304124191,"data":"Iter 200000 | T: 0.0144 | Best: 10.0 | Avg: 19.9 | 465.1s\n"}
+,{"stream_name":"stdout","time":859.304127739,"data":"Iter 205000 | T: 0.0126 | Best: 10.0 | Avg: 19.9 | 476.6s\n"}
+,{"stream_name":"stdout","time":859.304131393,"data":"Iter 210000 | T: 0.0110 | Best: 10.0 | Avg: 19.9 | 488.2s\n"}
+,{"stream_name":"stdout","time":859.304134928,"data":"Iter 215000 | T: 0.0097 | Best: 10.0 | Avg: 19.9 | 499.6s\n"}
+,{"stream_name":"stdout","time":859.304138514,"data":"Iter 220000 | T: 0.0085 | Best: 10.0 | Avg: 19.8 | 511.1s\n"}
+,{"stream_name":"stdout","time":859.304142009,"data":"Iter 225000 | T: 0.0074 | Best: 10.0 | Avg: 19.8 | 522.6s\n"}
+,{"stream_name":"stdout","time":859.304145545,"data":"Iter 230000 | T: 0.0065 | Best: 10.0 | Avg: 19.8 | 534.2s\n"}
+,{"stream_name":"stdout","time":859.304149146,"data":"Iter 235000 | T: 0.0057 | Best: 10.0 | Avg: 19.8 | 545.6s\n"}
+,{"stream_name":"stdout","time":859.304152965,"data":"Iter 240000 | T: 0.0050 | Best: 10.0 | Avg: 19.8 | 557.1s\n"}
+,{"stream_name":"stdout","time":859.304156427,"data":"Iter 245000 | T: 0.0043 | Best: 10.0 | Avg: 19.8 | 568.6s\n"}
+,{"stream_name":"stdout","time":859.304160105,"data":"Iter 250000 | T: 0.0038 | Best: 10.0 | Avg: 19.8 | 580.1s\n"}
+,{"stream_name":"stdout","time":859.304167567,"data":"Iter 255000 | T: 0.0033 | Best: 10.0 | Avg: 19.8 | 591.5s\n"}
+,{"stream_name":"stdout","time":859.304171155,"data":"Iter 260000 | T: 0.0029 | Best: 10.0 | Avg: 19.7 | 603.0s\n"}
+,{"stream_name":"stdout","time":859.304174711,"data":"Iter 265000 | T: 0.0025 | Best: 10.0 | Avg: 19.7 | 614.4s\n"}
+,{"stream_name":"stdout","time":859.304178547,"data":"Iter 270000 | T: 0.0022 | Best: 10.0 | Avg: 19.7 | 625.9s\n"}
+,{"stream_name":"stdout","time":859.304182298,"data":"Iter 275000 | T: 0.0019 | Best: 10.0 | Avg: 19.7 | 637.3s\n"}
+,{"stream_name":"stdout","time":859.304206074,"data":"Iter 280000 | T: 0.0017 | Best: 10.0 | Avg: 19.7 | 648.9s\n"}
+,{"stream_name":"stdout","time":859.30421021,"data":"Iter 285000 | T: 0.0015 | Best: 10.0 | Avg: 19.7 | 660.3s\n"}
+,{"stream_name":"stdout","time":859.304213818,"data":"Iter 290000 | T: 0.0013 | Best: 10.0 | Avg: 19.7 | 671.8s\n"}
+,{"stream_name":"stdout","time":859.304217352,"data":"Iter 295000 | T: 0.0011 | Best: 10.0 | Avg: 19.7 | 683.3s\n"}
+,{"stream_name":"stdout","time":859.304220934,"data":"Best score for m=6: 10.0\n"}
+,{"stream_name":"stderr","time":862.692477961,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":862.692512638,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":863.220275603,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":863.220313856,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":864.022722139,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":865.760949386,"data":"[NbConvertApp] Writing 310332 bytes to __results__.html\n"}
+]

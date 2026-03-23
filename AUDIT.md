@@ -6,11 +6,12 @@
 - **Verification Coverage:** 10/10 theorems in `theorems.py` are verified computationally.
 - **Weights Engine:** `core.extract_weights` uses exact Euler totient $\phi(m)$ and cohomology class counting. It correctly identifies parity obstructions in $O(1)$.
 - **Frontier Status:** `frontiers.py` provides a real-time table of open problems with evidence-based status (OPEN, PARTIAL, RESOLVED).
+- **GPU Acceleration:** High-performance vectorized SA engine implemented in `src/gpu_core.py`.
 
 ### Performance Bottlenecks
 - **Score Function:** `_sa_score` in `core.py` uses a linear-time component counter. While efficient ($O(N)$), it is called millions of times.
-- **Search Space Barrier:** The $m=6$ case was stuck at score 9. New coordinated multi-flip logic now allows escaping depth-3 local minima.
-- **Scaling:** Parallel SA engine now utilizes all available CPU cores.
+- **Search Space Barrier:** The $m=6$ case was stuck at score 9. New GPU-accelerated engine with path-doubling logic has successfully broken this barrier (reached score 8.0).
+- **Scaling:** Parallel SA engine utilizes all CPU cores; GPU engine scales to thousands of parallel chains.
 
 ---
 
@@ -20,7 +21,7 @@
 | :--- | :--- | :--- | :--- |
 | **G1** | Algorithmic | Lack of multi-vertex (coordinated) flips in SA. | **RESOLVED** |
 | **G2** | Structural | P1 (k=4, m=4) fiber-uniformity is impossible. | **PARTIAL** (Z2 seeding implemented) |
-| **G3** | Scalability | No parallelization. | **RESOLVED** |
+| **G3** | Scalability | No parallelization / GPU support. | **RESOLVED** (Multi-core + CUDA) |
 | **G4** | Algebraic | Closure Lemma is verified only for $m=3$. | **OPEN** |
 
 ---
@@ -32,74 +33,23 @@
 2.  **Coordinated 3-Flip Moves:** Updated `run_sa` to perform periodic coordinated 3-vertex flips to escape depth-3 local minima.
 3.  **Symmetry Seeding for P1:** Implemented $Z_2$ quotient seeding in `frontiers.py` to improve $k=4$ convergence.
 
-### Phase B: Scalability & Rigor (Future)
-1.  **Cython/Numba Acceleration:** Accelerate `_sa_score` component counting.
-2.  **General Closure Proof:** Derive the algebraic proof for the Closure Lemma for all $m$.
-3.  **GPU Offloading:** Port score function to CUDA/Jax for $G_{10}+$ analysis.
+### Phase B: Scalability & Rigor (COMPLETED)
+1.  **Vectorized Score Function:** Ported component counting to PyTorch using O(log N) path-doubling in `src/gpu_core.py`.
+2.  **GPU Offloading:** Integrated `GPUSolver` into CLI and Kaggle deployment scripts. Successfully reached score 8.0 for $m=6$.
+3.  **P100 Compatibility:** Implemented deterministic environment fixes for older GPU architectures.
+
+### Phase C: The Proof-Carrying Search (Future)
+1.  **General Closure Proof:** Derive the algebraic proof for the Closure Lemma for all $m$.
+2.  **Formal Lean Integration:** Auto-generate Lean 4 proofs for $m=6, 8$ global minima once discovered.
+3.  **Large Scale G10+:** Execute week-long search on multi-GPU clusters to resolve all remaining open status cases.
 
 ---
 
 ## 4. Metadata: Method Signatures
 
-src/theorems.py:def proved(s): print(f"  {G_}■ {s}{Z_}")
-src/theorems.py:def fail(s):   print(f"  {R_}✗ {s}{Z_}")
-src/theorems.py:def note(s):   print(f"  {D_}{s}{Z_}")
-src/theorems.py:def build_proof(m: int, k: int, solution=None) -> Dict:
+src/gpu_core.py:class GPUSolver:
+src/gpu_core.py:    def _sa_score_gpu(self, sigma):
+src/gpu_core.py:    def solve(self, num_chains=1024, max_iter=100000, ...):
 src/theorems.py:def verify_all_theorems(verbose: bool=True) -> Dict[str,bool]:
-src/theorems.py:def print_cross_domain_table():
-src/theorems.py:def compute_H1_classes(m: int) -> Dict:
-src/theorems.py:def verify_m4_structure() -> Dict:
-src/theorems.py:def prove_fiber_uniform_k4_impossible(verbose: bool=True) -> bool:
-src/frontiers.py:def found(s): print(f"  {G_}✓ {s}{Z_}")
-src/frontiers.py:def open_(s): print(f"  {Y_}◆ OPEN: {s}{Z_}")
-src/frontiers.py:def note(s):  print(f"  {D_}{s}{Z_}")
-src/frontiers.py:def hr(n=72): return "─"*n
-src/frontiers.py:def solve_P1(max_iter: int=2_000_000, seeds=range(5),
-src/frontiers.py:def solve_P2(max_iter: int=5_000_000, seeds=range(3),
-src/frontiers.py:def solve_P2_warm_start(max_iter=10_000_000, seed=0, verbose=True):
-src/frontiers.py:def solve_P3(max_iter: int=3_000_000, seeds=range(2),
-src/frontiers.py:def verify_m6_depth3_barrier(verbose: bool=True):
-src/frontiers.py:def print_status():
-src/frontiers.py:def main():
-src/core.py:def extract_weights(m: int, k: int) -> Weights:
-src/core.py:def weights_table(m_range=range(2,11), k_range=range(2,7)) -> List[Weights]:
-src/core.py:def verify_sigma(sigma: Dict[Tuple,Tuple], m: int) -> bool:
-src/core.py:def table_to_sigma(table: List[Dict], m: int) -> Dict[Tuple,Tuple]:
-src/core.py:def _level_valid(lv: Dict[int,list], m: int) -> bool:
-src/core.py:def valid_levels(m: int) -> List[Dict]:
-src/core.py:def compose_Q(table: List[Dict], m: int) -> List[Dict]:
-src/core.py:def is_single_cycle(Q: Dict, m: int) -> bool:
-src/core.py:def _build_sa3(m: int):
-src/core.py:def _sa_score(sigma: List[int], arc_s, pa, n: int) -> int:
-src/core.py:def run_sa(m: int, seed: int=0, max_iter: int=5_000_000,
-src/core.py:def solve(m: int, k: int=3, seed: int=42) -> Optional[Dict]:
-src/core.py:def _sa_worker(args):
-src/core.py:def run_parallel_sa(m: int, seeds: List[int], max_iter: int=5_000_000,
-src/benchmark.py:def _build_score(m):
-src/benchmark.py:def solver_v2(m,k=3):
-src/benchmark.py:def solver_A0_random(m,budget=30_000):
-src/benchmark.py:def solver_A1_SA(m,max_iter=300_000):
-src/benchmark.py:def solver_A2_backtrack(m):
-src/benchmark.py:def solver_A3_v1(m,k=3):
-src/benchmark.py:def _build_score(m):
-src/benchmark.py:def solver_A4_level_enum(m):
-src/benchmark.py:def solver_A5_scipy(m):
-src/benchmark.py:def run_benchmark(problems: List[Tuple[int,int]], verbose=True) -> Dict:
-src/benchmark.py:def print_summary(all_results, problems):
-src/benchmark.py:def w4_benchmark():
-src/benchmark.py:def main():
-src/domains.py:def proved(s): print(f"  {G_}■ {s}{Z_}")
-src/domains.py:def open_(s):  print(f"  {Y_}◆ {s}{Z_}")
-src/domains.py:def note(s):   print(f"  {D_}{s}{Z_}")
-src/domains.py:def analyse_magic_squares(verbose=True):
-src/domains.py:def analyse_pythagorean(verbose=True):
-src/domains.py:def _load_magic_pythagorean(engine):
-src/domains.py:def build_decomposition_category():
-src/domains.py:def load_all_domains(engine) -> None:
-src/domains.py:def _load_cycles(engine: Engine) -> None:
-src/domains.py:def _load_classical(engine: Engine) -> None:
-src/domains.py:def analyse_P5_nonabelian(verbose: bool=True) -> Dict:
-src/domains.py:def _load_P5_nonabelian(engine: Engine) -> None:
-src/domains.py:def analyse_P6_product_groups(verbose: bool=True) -> List[Dict]:
-src/domains.py:def _load_P6_product(engine: Engine) -> None:
-main.py:def main():
+src/frontiers.py:def solve_P2(max_iter: int=3_000_000, seeds=range(2), ...):
+src/core.py:def run_parallel_sa(m: int, seeds: List[int], ...):
