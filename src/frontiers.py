@@ -24,7 +24,7 @@ from math import gcd
 from itertools import permutations, product as iprod
 from typing import Optional, Dict, Tuple
 
-from .core import run_sa, extract_weights, run_parallel_sa
+from src.core import run_sa, extract_weights, run_parallel_sa
 
 G_="\033[92m";R_="\033[91m";Y_="\033[93m";W_="\033[97m";D_="\033[2m";Z_="\033[0m"
 def found(s): print(f"  {G_}✓ {s}{Z_}")
@@ -200,7 +200,7 @@ def solve_P2_warm_start(max_iter=10_000_000, seed=0, verbose=True):
     that span the Z_3 periodic structure.
     """
     import random, math
-    from .core import _build_sa3, _sa_score, verify_sigma, PRECOMPUTED, _ALL_P3
+    from src.core import _build_sa3, _sa_score, verify_sigma, PRECOMPUTED, _ALL_P3
     from itertools import permutations
 
     m=6; m3=3; m3_sol=PRECOMPUTED[(3,3)]
@@ -271,7 +271,7 @@ def solve_P2_equivariant(max_iter: int=5_000_000, seeds=range(4),
     G_6: 216 vertices, symmetry-guided equivariant SA.
     Flipping Z_2 and Z_3 orbits to escape the depth-3 barrier.
     """
-    from .core import run_parallel_sa_equivariant
+    from src.core import run_parallel_sa_equivariant
     m = 6
     n = m**3
 
@@ -342,7 +342,7 @@ def verify_m6_depth3_barrier(verbose: bool=True):
     that no 1-flip or random 2-flip improvements exist.
     """
     import random
-    from .core import _build_sa3, _sa_score, PRECOMPUTED, _ALL_P3
+    from src.core import _build_sa3, _sa_score, PRECOMPUTED, _ALL_P3
     from itertools import permutations
 
     m=6; m3=3; m3_sol=PRECOMPUTED[(3,3)]

@@ -24,7 +24,7 @@ Thm 10.1 Fiber-Uniform:     k=4, m=4 impossible (331,776 cases)
 from math import gcd
 from itertools import permutations, product as iprod
 from typing import Dict, List, Tuple, Optional
-from .core import (extract_weights, verify_sigma, PRECOMPUTED,
+from src.core import (extract_weights, verify_sigma, PRECOMPUTED,
                   SOLUTION_M4, valid_levels, compose_Q, is_single_cycle,
                   table_to_sigma, _ALL_P3, _FIBER_SHIFTS)
 

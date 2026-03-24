@@ -1,8 +1,8 @@
 import os
 import sys
 
-# Standard Kaggle paths
-WORKING_DIR = '/kaggle/working'
+# Ensure current directory is in path
+WORKING_DIR = os.path.dirname(os.path.abspath(__file__))
 if WORKING_DIR not in sys.path:
     sys.path.append(WORKING_DIR)
 

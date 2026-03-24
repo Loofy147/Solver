@@ -27,7 +27,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass, field
 from enum import Enum, auto
 
-from .core import extract_weights, Weights, verify_sigma, solve, PRECOMPUTED
+from src.core import extract_weights, Weights, verify_sigma, solve, PRECOMPUTED
 
 G_="\033[92m";R_="\033[91m";Y_="\033[93m";B_="\033[94m"
 C_="\033[96m";W_="\033[97m";D_="\033[2m";Z_="\033[0m"

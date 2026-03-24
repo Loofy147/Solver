@@ -3,18 +3,17 @@ import polars as pl
 import os
 import sys
 
-# Crucial: find the 'src' directory relative to this file
-# This server is in WORKING_DIR/kaggle_evaluation/
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if BASE_DIR not in sys.path:
-    sys.path.append(BASE_DIR)
+# Ensure root is in path
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if ROOT_DIR not in sys.path:
+    sys.path.append(ROOT_DIR)
 
 from src.real_world import AimoIntegration
 
 def predict(id: pl.Series, problem: pl.Series, *args) -> int:
-    problem_id = id.item()
-    problem_text = problem.item()
     try:
+        problem_id = str(id.item())
+        problem_text = str(problem.item())
         ans = AimoIntegration.classify_and_solve(problem_id, problem_text)
         return int(ans) % 100000
     except Exception:
