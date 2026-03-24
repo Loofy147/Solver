@@ -14,8 +14,6 @@ class AIMO3Gateway(kaggle_evaluation.core.templates.Gateway):
         super().__init__(data_paths, file_share_dir=None)
         self.data_paths = data_paths
         self.set_response_timeout_seconds(60 * 60 * 9)
-        self.row_id_column_name = 'id'
-        self.target_column_name = 'answer'
 
     def unpack_data_paths(self):
         if not self.data_paths:
@@ -23,15 +21,15 @@ class AIMO3Gateway(kaggle_evaluation.core.templates.Gateway):
         else:
             self.test_path = self.data_paths[0]
 
-    def generate_data_batches(self) -> Generator[tuple[tuple[pl.Series, pl.Series], pl.DataFrame], None, None]:
+    def generate_data_batches(
+        self,
+    ) -> Generator[tuple[pl.DataFrame, pl.DataFrame], None, None]:
         random_seed = int.from_bytes(os.urandom(4), byteorder='big')
         test = pl.read_csv(self.test_path)
         if not USE_PRIVATE_SET:
             test = test.sample(fraction=1.0, shuffle=True, with_replacement=False, seed=random_seed)
-
         for row in test.iter_slices(n_rows=1):
-            # Send (id_series, problem_series)
-            yield (row['id'], row['problem']), row.select('id')
+            yield row, row.select('id')
 
     def competition_specific_validation(self, prediction_batch, row_ids, data_batch) -> None:
         pass
@@ -40,3 +38,5 @@ if __name__ == '__main__':
     if os.getenv('KAGGLE_IS_COMPETITION_RERUN'):
         gateway = AIMO3Gateway()
         gateway.run()
+    else:
+        print('Skipping run for now')

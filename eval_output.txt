@@ -1,0 +1,14 @@
+Evaluating AIMO solvers on 10 reference problems...
+------------------------------------------------------------
+[0e644e] PASS | Expected:   336 | Actual:   336
+[26de63] PASS | Expected: 32951 | Actual: 32951
+[424e18] PASS | Expected: 21818 | Actual: 21818
+[42d360] PASS | Expected: 32193 | Actual: 32193
+[641659] PASS | Expected: 57447 | Actual: 57447
+[86e8e5] PASS | Expected:  8687 | Actual:  8687
+[92ba6a] PASS | Expected:    50 | Actual:    50
+[9c1c5f] PASS | Expected:   580 | Actual:   580
+[a295e9] PASS | Expected:   520 | Actual:   520
+[dd7f5e] PASS | Expected:   160 | Actual:   160
+------------------------------------------------------------
+Final Score: 10/10 (100.0%)

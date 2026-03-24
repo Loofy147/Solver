@@ -4,14 +4,14 @@ engine.py — The Global Structure Engine
 Pipeline · DomainRegistry · BranchTree · ClassifyingSpace
 
 Usage:
-    from .engine import Engine
+    from src.engine import Engine
     e = Engine()
     result = e.run(m=5, k=3)
     e.print_tree()
     e.print_space()
 
 Adding a new domain:
-    from .engine import Engine, Domain
+    from src.engine import Engine, Domain
     e = Engine()
     e.register(Domain("My System", group_order=729, k=3, m=9,
                        phi_desc="sum mod 9"))
@@ -280,6 +280,15 @@ def inject_domain(desc: Dict) -> Domain:
 
 
 class Engine:
+    def classify_latex(self, text: str) -> List[str]:
+        """Identify system domains relevant to the LaTeX problem."""
+        tags = []
+        if "tournament" in text.lower(): tags.append("combinatorics")
+        if "triangle" in text.lower() or "circle" in text.lower(): tags.append("geometry")
+        if "divisor" in text.lower() or "sigma" in text.lower(): tags.append("number_theory")
+        if "f(m) + f(n)" in text: tags.append("algebra")
+        return tags
+
     """
     The Global Structure Engine.
 

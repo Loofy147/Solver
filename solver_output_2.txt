@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/app/kaggle_bundle/kaggle_gpu_solver.py", line 48, in <module>
+    server.run_local_gateway(data_paths=(test_path,))
+  File "/app/kaggle_bundle/kaggle_evaluation/core/templates.py", line 108, in run_local_gateway
+    raise err from None
+  File "/app/kaggle_bundle/kaggle_evaluation/core/templates.py", line 106, in run_local_gateway
+    self.gateway.run()
+  File "/app/kaggle_bundle/kaggle_evaluation/core/base_gateway.py", line 151, in run
+    raise error
+  File "/app/kaggle_bundle/kaggle_evaluation/core/base_gateway.py", line 133, in run
+    self.write_submission(predictions, row_ids)
+  File "/app/kaggle_bundle/kaggle_evaluation/core/base_gateway.py", line 386, in write_submission
+    submission = self._convert_to_df(predictions, self.target_column_name)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/kaggle_bundle/kaggle_evaluation/core/base_gateway.py", line 360, in _convert_to_df
+    raise GatewayRuntimeError(
+kaggle_evaluation.core.base_gateway.GatewayRuntimeError: (<GatewayRuntimeErrorType.GATEWAY_RAISED_EXCEPTION: 5>, 'The gateway fields self.target_column_name and/or self.row_id_column_name must be set in order to use scalar data_batches or unnamed Pandas/Polars series')

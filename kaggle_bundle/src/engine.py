@@ -4,14 +4,14 @@ engine.py — The Global Structure Engine
 Pipeline · DomainRegistry · BranchTree · ClassifyingSpace
 
 Usage:
-    from .engine import Engine
+    from src.engine import Engine
     e = Engine()
     result = e.run(m=5, k=3)
     e.print_tree()
     e.print_space()
 
 Adding a new domain:
-    from .engine import Engine, Domain
+    from src.engine import Engine, Domain
     e = Engine()
     e.register(Domain("My System", group_order=729, k=3, m=9,
                        phi_desc="sum mod 9"))

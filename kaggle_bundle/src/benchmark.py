@@ -17,7 +17,7 @@ from itertools import permutations, product as iprod
 from typing import Optional, Dict, List, Tuple
 from dataclasses import dataclass
 
-from .core import (extract_weights, verify_sigma, PRECOMPUTED, run_sa,
+from src.core import (extract_weights, verify_sigma, PRECOMPUTED, run_sa,
                   valid_levels, compose_Q, is_single_cycle, table_to_sigma,
                   _ALL_P3)
 

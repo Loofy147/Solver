@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/app/kaggle_bundle/kaggle_gpu_solver.py", line 48, in <module>
+    server.run_local_gateway(data_paths=(test_path,))
+  File "/app/kaggle_bundle/kaggle_evaluation/core/templates.py", line 108, in run_local_gateway
+    raise err from None
+  File "/app/kaggle_bundle/kaggle_evaluation/core/templates.py", line 106, in run_local_gateway
+    self.gateway.run()
+  File "/app/kaggle_bundle/kaggle_evaluation/core/base_gateway.py", line 151, in run
+    raise error
+  File "/app/kaggle_bundle/kaggle_evaluation/core/base_gateway.py", line 132, in run
+    predictions, row_ids = self.get_all_predictions()
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/kaggle_bundle/kaggle_evaluation/core/base_gateway.py", line 108, in get_all_predictions
+    predictions = self.predict(*data_batch)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/kaggle_bundle/kaggle_evaluation/core/base_gateway.py", line 126, in predict
+    self.handle_server_error(e, 'predict')
+  File "/app/kaggle_bundle/kaggle_evaluation/core/base_gateway.py", line 431, in handle_server_error
+    raise GatewayRuntimeError(GatewayRuntimeErrorType.SERVER_RAISED_EXCEPTION, message) from None
+kaggle_evaluation.core.base_gateway.GatewayRuntimeError: (<GatewayRuntimeErrorType.SERVER_RAISED_EXCEPTION: 3>, 'predict() takes 1 positional argument but 2 were given')

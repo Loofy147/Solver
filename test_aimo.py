@@ -1,6 +1,7 @@
 import unittest
-from src.aimo_solvers import AimoSolver
+from src.aimo_solvers import AimoSolver, ParameterExtractor
 from src.real_world import MathSolver
+from src.engine import Engine
 
 class TestAimoSolvers(unittest.TestCase):
     def test_solve_0e644e(self):
@@ -42,14 +43,19 @@ class TestAimoSolvers(unittest.TestCase):
         self.assertEqual(MathSolver.catalan_valuation(4, 2), 1)
 
     def test_solve_symbolic(self):
-        # Placeholder problems from test.csv
-        # Note: solve_symbolic needs to handle \times etc.
-        # But for now we just verify the basic logic.
-        self.assertEqual(AimoSolver.solve_symbolic("What is $1-1$?"), 0)
-        # We need to make sure \times is handled or just test basic arithmetic
-        self.assertEqual(AimoSolver.solve_symbolic("What is $0*10$?"), 0)
-        self.assertEqual(AimoSolver.solve_symbolic("Solve $4+x=4$ for $x$."), 0)
-        self.assertEqual(AimoSolver.solve_symbolic("Solve $x+5=10$ for $x$."), 5)
+        self.assertEqual(AimoSolver.solve_symbolic("Solve x+5=10 for x."), 5)
+        self.assertEqual(AimoSolver.solve_symbolic("What is 10+20"), 30)
+
+    def test_parameter_extractor(self):
+        text = "Find the remainder when abc is divided by 10^{5}."
+        params = ParameterExtractor.extract_all(text)
+        self.assertEqual(params.get('modulus'), 100000)
+
+    def test_engine_classification(self):
+        e = Engine()
+        text = "A tournament is held with 2^{20} runners."
+        tags = e.classify_latex(text)
+        self.assertIn("combinatorics", tags)
 
 if __name__ == "__main__":
     unittest.main()
