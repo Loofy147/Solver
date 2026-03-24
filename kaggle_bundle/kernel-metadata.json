@@ -1,7 +1,7 @@
 {
   "id": "hichambedrani/symmetry-gpu-solver",
   "title": "Symmetry GPU Solver",
-  "code_file": "kaggle_gpu_solver.py",
+  "code_file": "submission.py",
   "language": "python",
   "kernel_type": "script",
   "is_private": "true",
