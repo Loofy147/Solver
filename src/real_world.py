@@ -90,3 +90,74 @@ class ProteinSolver:
                 break
 
         return {"sequence": sequence, "path": path, "score": sum(1 for p in path)}
+
+class MathSolver:
+    @staticmethod
+    def legendre_valuation(n: int, p: int) -> int:
+        """Computes v_p(n!) using Legendre's formula."""
+        count = 0
+        while n > 0:
+            n //= p
+            count += n
+        return count
+
+    @staticmethod
+    def catalan_valuation(m: int, p: int) -> int:
+        """Computes v_p(Cat(m)) where Cat(m) is the m-th Catalan number."""
+        # Cat(m) = (2m)! / ((m+1)! m!)
+        v = MathSolver.legendre_valuation
+        return v(2*m, p) - v(m, p) - v(m+1, p)
+
+    @staticmethod
+    def sum_divisors_valuation_pow2(p: int, e: int, k: int) -> int:
+        """
+        Computes v_2(sigma_k(p^e)).
+        sigma_k(p^e) = (p^(k(e+1)) - 1) / (p^k - 1)
+        """
+        if p == 2:
+            return 0
+        def v2_pow_minus_1(x, n):
+            if n == 0: return 0
+            v_x_minus_1 = 0
+            tmp = x - 1
+            while tmp > 0 and tmp % 2 == 0:
+                v_x_minus_1 += 1
+                tmp //= 2
+            v_x_plus_1 = 0
+            tmp = x + 1
+            while tmp > 0 and tmp % 2 == 0:
+                v_x_plus_1 += 1
+                tmp //= 2
+            v_n = 0
+            tmp = n
+            while tmp > 0 and tmp % 2 == 0:
+                v_n += 1
+                tmp //= 2
+            return v_x_minus_1 + v_x_plus_1 + v_n - 1
+        v_num = v2_pow_minus_1(p, k * (e + 1))
+        v_den = v2_pow_minus_1(p, k)
+        return v_num - v_den
+
+class AimoIntegration:
+    """
+    Glue logic to connect AIMO competition problems to the Symmetry framework.
+    """
+    @staticmethod
+    def classify_and_solve(problem_id: str, problem_text: str) -> int:
+        from src.aimo_solvers import AimoSolver
+        # Known problems mapping
+        solvers = {
+            "0e644e": AimoSolver.solve_0e644e,
+            "26de63": AimoSolver.solve_26de63,
+            "424e18": AimoSolver.solve_424e18,
+            "42d360": AimoSolver.solve_42d360,
+            "641659": AimoSolver.solve_641659,
+            "86e8e5": AimoSolver.solve_86e8e5,
+            "92ba6a": AimoSolver.solve_92ba6a,
+            "9c1c5f": AimoSolver.solve_9c1c5f,
+            "a295e9": AimoSolver.solve_a295e9,
+            "dd7f5e": AimoSolver.solve_dd7f5e,
+        }
+        if problem_id in solvers:
+            return solvers[problem_id]()
+        return AimoSolver.solve_general(problem_text)

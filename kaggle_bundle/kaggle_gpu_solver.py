@@ -1,77 +1,25 @@
-import torch
-import sys
 import os
-import time
+import sys
 
-# Add src to path
-sys.path.append('src')
+# Standard relative path detection
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+if BASE_DIR not in sys.path:
+    sys.path.append(BASE_DIR)
 
-from gpu_core import GPUSolver
-from core import verify_sigma
-
-def solve_m6():
-    m = 6
-    solver = GPUSolver(m)
-
-    # Define orbits for equivariant moves
-    orbits = []
-    def enc(i, j, k): return i*m*m + j*m + k
-
-    # Z_2 and Z_3 coordinate orbits
-    for j in range(m):
-        for k in range(m):
-            orbits.append([enc(i, j, k) for i in [0, 3]])
-            orbits.append([enc(i, j, k) for i in [1, 4]])
-            orbits.append([enc(i, j, k) for i in [2, 5]])
-            orbits.append([enc(i, j, k) for i in [0, 2, 4]])
-            orbits.append([enc(i, j, k) for i in [1, 3, 5]])
-
-    print(f"\nStarting GPU SA for m=6, k=3")
-    best_sigma, best_score = solver.solve(
-        num_chains=2048,
-        max_iter=500000,
-        T_init=3.0,
-        T_min=0.001,
-        orbits=orbits,
-        p_equivariant=0.2,
-        verbose=True
-    )
-
-    if best_score == 0:
-        print("SOLVED m=6!")
-        sol_dict = solver.sigma_to_dict(best_sigma)
-        print(f"Verified: {verify_sigma(sol_dict, m)}")
-        return sol_dict
-    else:
-        print(f"Failed to solve m=6. Best score: {best_score}")
-        return None
-
-def solve_m8():
-    m = 8
-    solver = GPUSolver(m)
-    print(f"\nStarting GPU SA for m=8, k=3")
-    best_sigma, best_score = solver.solve(
-        num_chains=1024,
-        max_iter=800000,
-        T_init=3.0,
-        T_min=0.001,
-        verbose=True
-    )
-
-    if best_score == 0:
-        print("SOLVED m=8!")
-        sol_dict = solver.sigma_to_dict(best_sigma)
-        print(f"Verified: {verify_sigma(sol_dict, m)}")
-        return sol_dict
-    else:
-        print(f"Failed to solve m=8. Best score: {best_score}")
-        return None
+from kaggle_evaluation.aimo_3_inference_server import AIMO3InferenceServer
+from aimo_logic import predict
 
 if __name__ == "__main__":
-    print(f"Device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU'}")
+    server = AIMO3InferenceServer(predict)
 
-    s6 = solve_m6()
-    s8 = solve_m8()
+    # KAGGLE_IS_COMPETITION_RERUN is set during the private rerun
+    if os.getenv('KAGGLE_IS_COMPETITION_RERUN'):
+        server.serve()
+    else:
+        # Commit phase: generate submission.parquet
+        test_path = '/kaggle/input/ai-mathematical-olympiad-progress-prize-3/test.csv'
+        if not os.path.exists(test_path):
+            # For local verification or commit if path differs
+            test_path = 'test.csv'
 
-    if s6: torch.save(s6, 'sol_m6.pt')
-    if s8: torch.save(s8, 'sol_m8.pt')
+        server.run_local_gateway(data_paths=(test_path,))
