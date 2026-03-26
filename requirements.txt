@@ -1,0 +1,9 @@
+numpy
+sympy
+polars
+pandas
+pyarrow
+grpcio
+grpcio-tools
+protobuf
+mpmath

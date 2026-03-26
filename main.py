@@ -1,3 +1,4 @@
+from src.universality import UniversalityChecker
 import sys
 import argparse
 import os
@@ -23,6 +24,7 @@ C_="\033[96m";W_="\033[97m";D_="\033[2m";Z_="\033[0m"
 def main():
     parser = argparse.ArgumentParser(description="Highly Symmetric Systems Explorer")
     parser.add_argument("--theorems", action="store_true", help="Run theorem verification")
+    parser.add_argument("--universality", action="store_true", help="Show cross-domain universality table")
     parser.add_argument("--status", action="store_true", help="Check open problem status")
     parser.add_argument("--benchmark", action="store_true", help="Run quick benchmark")
     parser.add_argument("--p1", action="store_true", help="Run P1 solver (k=4, m=4)")
@@ -57,6 +59,11 @@ def main():
         verify_all_theorems(verbose=True)
         print_cross_domain_table()
 
+
+    if args.universality:
+        e = Engine()
+        checker = UniversalityChecker(e.registry)
+        checker.print_table()
     if args.status:
         print_status()
         e = Engine()
