@@ -31,17 +31,58 @@ class GPUSolver:
             total_score += (labels == base_labels).sum(dim=1).to(torch.float) - 1
         return total_score
 
-    def solve(self, num_chains=1024, max_iter=200000, T_init=3.0, T_min=0.001):
+    def solve(self, num_chains=1024, max_iter=200000, T_init=3.0, T_min=0.001, orbits=None, reheats=4):
+        """
+        Standard and Equivariant SA on GPU.
+        orbits: List of lists of vertex indices forming subgroup orbits.
+        reheats: Number of times to reset the temperature schedule.
+        """
         sigma = torch.randint(0, 6, (num_chains, self.n), device=self.device)
         cs = self._sa_score_gpu(sigma); bs = cs.clone(); best_sigmas = sigma.clone()
-        T = T_init; cool = (T_min / T_init)**(1.0 / max_iter)
+
+        iter_per_heat = max_iter // (reheats + 1)
+        cool = (T_min / T_init)**(1.0 / iter_per_heat)
+        T = T_init
+
+        # Prepare orbits if provided
+        orbit_tensors = None
+        if orbits:
+            max_len = max(len(o) for o in orbits)
+            orbit_tensors = torch.full((len(orbits), max_len), -1, dtype=torch.long, device=self.device)
+            for i, o in enumerate(orbits):
+                orbit_tensors[i, :len(o)] = torch.tensor(o, dtype=torch.long, device=self.device)
+
         for i in range(max_iter):
             if (bs == 0).any(): break
-            old_sigma = sigma.clone(); v = torch.randint(0, self.n, (num_chains,), device=self.device)
-            sigma[torch.arange(num_chains), v] = torch.randint(0, 6, (num_chains,), device=self.device)
+            old_sigma = sigma.clone()
+
+            # Decide move type
+            if orbits and i % 10 == 0:
+                # Equivariant Move: flip entire orbits
+                o_idx = torch.randint(0, len(orbits), (num_chains,), device=self.device)
+                o_verts = orbit_tensors[o_idx] # (num_chains, max_len)
+                new_vals = torch.randint(0, 6, (num_chains,), device=self.device).unsqueeze(1).expand(-1, o_verts.shape[1])
+                mask = o_verts >= 0
+                rows = torch.arange(num_chains, device=self.device).unsqueeze(1).expand_as(o_verts)
+                sigma[rows[mask], o_verts[mask]] = new_vals[mask]
+            else:
+                # Standard Move: single vertex flip
+                v = torch.randint(0, self.n, (num_chains,), device=self.device)
+                sigma[torch.arange(num_chains), v] = torch.randint(0, 6, (num_chains,), device=self.device)
+
             ns = self._sa_score_gpu(sigma); delta = ns - cs
             accept = (delta <= 0) | (torch.rand(num_chains, device=self.device) < torch.exp(-delta / T))
             sigma[~accept] = old_sigma[~accept]; cs[accept] = ns[accept]
-            mask = cs < bs; bs[mask] = cs[mask]; best_sigmas[mask] = sigma[mask]
+
+            mask = cs < bs
+            if mask.any():
+                bs[mask] = cs[mask]; best_sigmas[mask] = sigma[mask]
+
             T *= cool
-        idx = bs.argmin().item(); return best_sigmas[idx], bs[idx].item()
+
+            # Periodic Reheat
+            if (i + 1) % iter_per_heat == 0:
+                T = T_init * (0.8 ** ((i + 1) // iter_per_heat))
+
+        idx = bs.argmin().item()
+        return best_sigmas[idx], bs[idx].item()

@@ -20,7 +20,7 @@
 | Gap ID | Category | Description | Status |
 | :--- | :--- | :--- | :--- |
 | **G1** | Algorithmic | Lack of multi-vertex (coordinated) flips in SA. | **RESOLVED** |
-| **G2** | Structural | P1 (k=4, m=4) fiber-uniformity is impossible. | **PARTIAL** (Z2 seeding implemented) |
+| **G2** | Structural | P1 (k=4, m=4) fiber-uniformity is impossible. | **PARTIAL** (Best: 16) |
 | **G3** | Scalability | No parallelization / GPU support. | **RESOLVED** (Multi-core + CUDA) |
 | **G4** | Algebraic | Closure Lemma is verified only for $m=3$. | **OPEN** |
 
@@ -31,17 +31,17 @@
 ### Phase A: The Barrier-Breaker (COMPLETED)
 1.  **Parallel SA Seeds:** Implemented `run_parallel_sa` in `core.py` utilizing `multiprocessing` for multi-core scaling.
 2.  **Coordinated 3-Flip Moves:** Updated `run_sa` to perform periodic coordinated 3-vertex flips to escape depth-3 local minima.
-3.  **Symmetry Seeding for P1:** Implemented $Z_2$ quotient seeding in `frontiers.py` to improve $k=4$ convergence.
+3.  **Symmetry Seeding for P1:** Implemented $Z_2$ quotient seeding in `frontiers.py` to improve $k=4$ convergence. (Best score: 16).
 
 ### Phase B: Scalability & Rigor (COMPLETED)
 1.  **Vectorized Score Function:** Ported component counting to PyTorch using O(log N) path-doubling in `src/gpu_core.py`.
-2.  **GPU Offloading:** Integrated `GPUSolver` into CLI and Kaggle deployment scripts. Successfully reached score 8.0 for $m=6$.
-3.  **P100 Compatibility:** Implemented deterministic environment fixes for older GPU architectures.
+2.  **GPU Offloading:** Integrated `GPUSolver` into CLI and Kaggle deployment scripts. Reached score 8.0 for $m=6$.
+3.  **Large Scale Search (v3):** Latest Kaggle runs reached P1=16, P2=8, P3=25.
 
 ### Phase C: The Proof-Carrying Search (Future)
 1.  **General Closure Proof:** Derive the algebraic proof for the Closure Lemma for all $m$.
 2.  **Formal Lean Integration:** Auto-generate Lean 4 proofs for $m=6, 8$ global minima once discovered.
-3.  **Large Scale G10+:** Execute week-long search on multi-GPU clusters to resolve all remaining open status cases.
+3.  **GPU Equivariant Moves:** Implement synchronized subgroup orbit flips in the vectorized engine.
 
 ---
 
