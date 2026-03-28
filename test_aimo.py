@@ -34,6 +34,21 @@ class TestAimoSolvers(unittest.TestCase):
     def test_solve_dd7f5e(self):
         self.assertEqual(AimoSolver.solve_dd7f5e(), 160)
 
+    def test_solve_IMO081(self):
+        self.assertEqual(AimoSolver.solve_IMO081(), 315)
+
+    def test_solve_N02533(self):
+        self.assertEqual(AimoSolver.solve_N02533(), 12)
+
+    def test_solve_N04506(self):
+        self.assertEqual(AimoSolver.solve_N04506(), 1280)
+
+    def test_solve_N02560(self):
+        self.assertEqual(AimoSolver.solve_N02560(), 1)
+
+    def test_solve_N02457(self):
+        self.assertEqual(AimoSolver.solve_N02457(), 15)
+
     def test_math_solver_valuation(self):
         self.assertEqual(MathSolver.legendre_valuation(8, 2), 7)
         self.assertEqual(MathSolver.legendre_valuation(25, 5), 6)

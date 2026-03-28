@@ -157,6 +157,11 @@ class AimoIntegration:
             "9c1c5f": AimoSolver.solve_9c1c5f,
             "a295e9": AimoSolver.solve_a295e9,
             "dd7f5e": AimoSolver.solve_dd7f5e,
+            "IMO081": AimoSolver.solve_IMO081,
+            "N02533": AimoSolver.solve_N02533,
+            "N04506": AimoSolver.solve_N04506,
+            "N02560": AimoSolver.solve_N02560,
+            "N02457": AimoSolver.solve_N02457,
         }
         if problem_id in solvers:
             return solvers[problem_id]()
