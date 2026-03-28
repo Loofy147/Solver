@@ -1,0 +1,110 @@
+[{"stream_name":"stdout","time":1.319079839,"data":"Problem: P3, Max Iters: 10000000, Seed: 42\n"}
+,{"stream_name":"stdout","time":24.489614135,"data":"  it= 100,000 T=1.63746 score=376 best=356 reh=0 23.2s\n"}
+,{"stream_name":"stdout","time":47.419280377,"data":"  it= 200,000 T=1.34064 score=367 best=324 reh=0 46.1s\n"}
+,{"stream_name":"stdout","time":70.179785681,"data":"  it= 300,000 T=1.09762 score=339 best=297 reh=0 68.9s\n"}
+,{"stream_name":"stdout","time":92.717532147,"data":"  it= 400,000 T=0.89866 score=290 best=265 reh=0 91.4s\n"}
+,{"stream_name":"stdout","time":115.017016317,"data":"  it= 500,000 T=0.73576 score=270 best=225 reh=0 113.7s\n"}
+,{"stream_name":"stdout","time":137.07677639,"data":"  it= 600,000 T=0.60239 score=214 best=175 reh=0 135.8s\n"}
+,{"stream_name":"stdout","time":158.636833784,"data":"  it= 700,000 T=0.49319 score=120 best=106 reh=0 157.3s\n"}
+,{"stream_name":"stdout","time":179.743039243,"data":"  it= 800,000 T=0.40379 score=88 best=82 reh=0 178.4s\n"}
+,{"stream_name":"stdout","time":200.499631387,"data":"  it= 900,000 T=0.33060 score=55 best=49 reh=0 199.2s\n"}
+,{"stream_name":"stdout","time":221.200863776,"data":"  it=1,000,000 T=0.27067 score=38 best=38 reh=0 219.9s\n"}
+,{"stream_name":"stdout","time":241.84400855,"data":"  it=1,100,000 T=0.22161 score=35 best=35 reh=0 240.5s\n"}
+,{"stream_name":"stdout","time":263.773461406,"data":"  it=1,200,000 T=1.47548 score=348 best=35 reh=1 262.5s\n"}
+,{"stream_name":"stdout","time":286.541520512,"data":"  it=1,300,000 T=1.22957 score=355 best=35 reh=2 285.2s\n"}
+,{"stream_name":"stdout","time":309.167562491,"data":"  it=1,400,000 T=1.02465 score=313 best=35 reh=3 307.8s\n"}
+,{"stream_name":"stdout","time":331.588828145,"data":"  it=1,500,000 T=0.85387 score=305 best=35 reh=4 330.3s\n"}
+,{"stream_name":"stdout","time":353.705296737,"data":"  it=1,600,000 T=0.71156 score=252 best=35 reh=5 352.4s\n"}
+,{"stream_name":"stdout","time":375.540691396,"data":"  it=1,700,000 T=0.59297 score=194 best=35 reh=6 374.2s\n"}
+,{"stream_name":"stdout","time":396.962703622,"data":"  it=1,800,000 T=0.49414 score=125 best=35 reh=7 395.6s\n"}
+,{"stream_name":"stdout","time":417.986465537,"data":"  it=1,900,000 T=0.41179 score=73 best=35 reh=8 416.7s\n"}
+,{"stream_name":"stdout","time":438.752591024,"data":"  it=2,000,000 T=0.34316 score=46 best=35 reh=9 437.4s\n"}
+,{"stream_name":"stdout","time":459.339559614,"data":"  it=2,100,000 T=0.28596 score=34 best=34 reh=10 458.0s\n"}
+,{"stream_name":"stdout","time":479.815034323,"data":"  it=2,200,000 T=0.23413 score=30 best=30 reh=10 478.5s\n"}
+,{"stream_name":"stdout","time":500.293822285,"data":"  it=2,300,000 T=0.19169 score=28 best=28 reh=10 499.0s\n"}
+,{"stream_name":"stdout","time":520.727260479,"data":"  it=2,400,000 T=0.15694 score=27 best=27 reh=10 519.4s\n"}
+,{"stream_name":"stdout","time":541.302956376,"data":"  it=2,500,000 T=0.22039 score=33 best=27 reh=11 540.0s\n"}
+,{"stream_name":"stdout","time":561.740082607,"data":"  it=2,600,000 T=0.18366 score=36 best=27 reh=12 560.4s\n"}
+,{"stream_name":"stdout","time":582.197201662,"data":"  it=2,700,000 T=0.15305 score=33 best=27 reh=13 580.9s\n"}
+,{"stream_name":"stdout","time":602.715180459,"data":"  it=2,800,000 T=0.12754 score=32 best=27 reh=14 601.4s\n"}
+,{"stream_name":"stdout","time":623.130496413,"data":"  it=2,900,000 T=0.10628 score=35 best=27 reh=15 621.8s\n"}
+,{"stream_name":"stdout","time":643.73511602,"data":"  it=3,000,000 T=0.08857 score=39 best=27 reh=16 642.4s\n"}
+,{"stream_name":"stdout","time":664.310204652,"data":"  it=3,100,000 T=0.07381 score=38 best=27 reh=17 663.0s\n"}
+,{"stream_name":"stdout","time":684.726938546,"data":"  it=3,200,000 T=0.06151 score=28 best=27 reh=18 683.4s\n"}
+,{"stream_name":"stdout","time":705.191633787,"data":"  it=3,300,000 T=0.05126 score=37 best=27 reh=19 703.9s\n"}
+,{"stream_name":"stdout","time":725.644020011,"data":"  it=3,400,000 T=0.04271 score=32 best=27 reh=20 724.3s\n"}
+,{"stream_name":"stdout","time":746.140170096,"data":"  it=3,500,000 T=0.03559 score=32 best=27 reh=21 744.8s\n"}
+,{"stream_name":"stdout","time":766.722802272,"data":"  it=3,600,000 T=0.02966 score=30 best=27 reh=22 765.4s\n"}
+,{"stream_name":"stdout","time":787.303394995,"data":"  it=3,700,000 T=0.02472 score=37 best=27 reh=23 786.0s\n"}
+,{"stream_name":"stdout","time":807.748838513,"data":"  it=3,800,000 T=0.02060 score=26 best=26 reh=24 806.4s\n"}
+,{"stream_name":"stdout","time":828.232983551,"data":"  it=3,900,000 T=0.01970 score=37 best=26 reh=25 826.9s\n"}
+,{"stream_name":"stdout","time":848.747426716,"data":"  it=4,000,000 T=0.01641 score=31 best=26 reh=26 847.4s\n"}
+,{"stream_name":"stdout","time":869.249462956,"data":"  it=4,100,000 T=0.01344 score=23 best=23 reh=26 867.9s\n"}
+,{"stream_name":"stdout","time":889.754411284,"data":"  it=4,200,000 T=0.01418 score=54 best=23 reh=27 888.4s\n"}
+,{"stream_name":"stdout","time":910.377754904,"data":"  it=4,300,000 T=0.01181 score=46 best=23 reh=28 909.1s\n"}
+,{"stream_name":"stdout","time":930.923469704,"data":"  it=4,400,000 T=0.00984 score=49 best=23 reh=29 929.6s\n"}
+,{"stream_name":"stdout","time":951.606405667,"data":"  it=4,500,000 T=0.00820 score=43 best=23 reh=30 950.3s\n"}
+,{"stream_name":"stdout","time":972.162613928,"data":"  it=4,600,000 T=0.00684 score=46 best=23 reh=31 970.8s\n"}
+,{"stream_name":"stdout","time":992.760641356,"data":"  it=4,700,000 T=0.00570 score=39 best=23 reh=32 991.4s\n"}
+,{"stream_name":"stdout","time":1013.467663229,"data":"  it=4,800,000 T=0.00475 score=35 best=23 reh=33 1012.1s\n"}
+,{"stream_name":"stdout","time":1034.164943941,"data":"  it=4,900,000 T=0.00396 score=47 best=23 reh=34 1032.8s\n"}
+,{"stream_name":"stdout","time":1055.007635221,"data":"  it=5,000,000 T=0.00330 score=38 best=23 reh=35 1053.7s\n"}
+,{"stream_name":"stdout","time":1076.427940595,"data":"  it=5,100,000 T=0.00275 score=51 best=23 reh=36 1075.1s\n"}
+,{"stream_name":"stdout","time":1097.783729375,"data":"  it=5,200,000 T=0.00229 score=43 best=23 reh=37 1096.5s\n"}
+,{"stream_name":"stdout","time":1119.577971857,"data":"  it=5,300,000 T=0.00191 score=46 best=23 reh=38 1118.3s\n"}
+,{"stream_name":"stdout","time":1141.996663875,"data":"  it=5,400,000 T=0.00159 score=45 best=23 reh=39 1140.7s\n"}
+,{"stream_name":"stdout","time":1163.695816321,"data":"  it=5,500,000 T=0.00133 score=32 best=23 reh=40 1162.4s\n"}
+,{"stream_name":"stdout","time":1187.315314891,"data":"  it=5,600,000 T=0.00110 score=39 best=23 reh=41 1186.0s\n"}
+,{"stream_name":"stdout","time":1211.256018706,"data":"  it=5,700,000 T=0.00092 score=40 best=23 reh=42 1209.9s\n"}
+,{"stream_name":"stdout","time":1235.314860395,"data":"  it=5,800,000 T=0.00077 score=36 best=23 reh=43 1234.0s\n"}
+,{"stream_name":"stdout","time":1258.759511908,"data":"  it=5,900,000 T=0.00063 score=20 best=20 reh=43 1257.4s\n"}
+,{"stream_name":"stdout","time":1281.614397867,"data":"  it=6,000,000 T=0.00051 score=19 best=19 reh=43 1280.3s\n"}
+,{"stream_name":"stdout","time":1304.846682082,"data":"  it=6,100,000 T=0.00054 score=19 best=19 reh=44 1303.5s\n"}
+,{"stream_name":"stdout","time":1327.640467056,"data":"  it=6,200,000 T=0.00045 score=26 best=19 reh=45 1326.3s\n"}
+,{"stream_name":"stdout","time":1350.562939313,"data":"  it=6,300,000 T=0.00037 score=19 best=19 reh=46 1349.2s\n"}
+,{"stream_name":"stdout","time":1373.649254341,"data":"  it=6,400,000 T=0.00031 score=21 best=19 reh=47 1372.3s\n"}
+,{"stream_name":"stdout","time":1395.69579912,"data":"  it=6,500,000 T=0.00026 score=24 best=19 reh=48 1394.4s\n"}
+,{"stream_name":"stdout","time":1417.806103619,"data":"  it=6,600,000 T=0.00022 score=29 best=19 reh=49 1416.5s\n"}
+,{"stream_name":"stdout","time":1439.613416436,"data":"  it=6,700,000 T=0.00018 score=18 best=18 reh=50 1438.3s\n"}
+,{"stream_name":"stdout","time":1461.228476731,"data":"  it=6,800,000 T=0.00017 score=19 best=18 reh=51 1459.9s\n"}
+,{"stream_name":"stdout","time":1483.170942439,"data":"  it=6,900,000 T=0.00014 score=35 best=18 reh=52 1481.9s\n"}
+,{"stream_name":"stdout","time":1504.931710238,"data":"  it=7,000,000 T=0.00012 score=27 best=18 reh=53 1503.6s\n"}
+,{"stream_name":"stdout","time":1526.744073902,"data":"  it=7,100,000 T=0.00010 score=20 best=18 reh=54 1525.4s\n"}
+,{"stream_name":"stdout","time":1548.395535649,"data":"  it=7,200,000 T=0.00008 score=22 best=18 reh=55 1547.1s\n"}
+,{"stream_name":"stdout","time":1570.093231714,"data":"  it=7,300,000 T=0.00007 score=35 best=18 reh=56 1568.8s\n"}
+,{"stream_name":"stdout","time":1592.280895062,"data":"  it=7,400,000 T=0.00006 score=30 best=18 reh=57 1591.0s\n"}
+,{"stream_name":"stdout","time":1614.418910478,"data":"  it=7,500,000 T=0.00005 score=27 best=18 reh=58 1613.1s\n"}
+,{"stream_name":"stdout","time":1636.37036603,"data":"  it=7,600,000 T=0.00004 score=21 best=18 reh=59 1635.0s\n"}
+,{"stream_name":"stdout","time":1658.331656282,"data":"  it=7,700,000 T=0.00003 score=29 best=18 reh=60 1657.0s\n"}
+,{"stream_name":"stdout","time":1680.467321083,"data":"  it=7,800,000 T=0.00003 score=28 best=18 reh=61 1679.1s\n"}
+,{"stream_name":"stdout","time":1702.409673993,"data":"  it=7,900,000 T=0.00002 score=20 best=18 reh=62 1701.1s\n"}
+,{"stream_name":"stdout","time":1724.503168255,"data":"  it=8,000,000 T=0.00002 score=28 best=18 reh=63 1723.2s\n"}
+,{"stream_name":"stdout","time":1746.887638939,"data":"  it=8,100,000 T=0.00002 score=27 best=18 reh=64 1745.6s\n"}
+,{"stream_name":"stdout","time":1769.035867393,"data":"  it=8,200,000 T=0.00001 score=25 best=18 reh=65 1767.7s\n"}
+,{"stream_name":"stdout","time":1791.724239644,"data":"  it=8,300,000 T=0.00001 score=21 best=18 reh=66 1790.4s\n"}
+,{"stream_name":"stdout","time":1814.375426528,"data":"  it=8,400,000 T=0.00001 score=22 best=18 reh=67 1813.1s\n"}
+,{"stream_name":"stdout","time":1836.858053575,"data":"  it=8,500,000 T=0.00001 score=22 best=18 reh=68 1835.5s\n"}
+,{"stream_name":"stdout","time":1859.589132373,"data":"  it=8,600,000 T=0.00001 score=16 best=16 reh=69 1858.3s\n"}
+,{"stream_name":"stdout","time":1881.969335866,"data":"  it=8,700,000 T=0.00001 score=15 best=15 reh=69 1880.6s\n"}
+,{"stream_name":"stdout","time":1905.029507042,"data":"  it=8,800,000 T=0.00000 score=20 best=15 reh=70 1903.7s\n"}
+,{"stream_name":"stdout","time":1927.75667687,"data":"  it=8,900,000 T=0.00000 score=19 best=15 reh=71 1926.4s\n"}
+,{"stream_name":"stdout","time":1950.442550289,"data":"  it=9,000,000 T=0.00000 score=27 best=15 reh=72 1949.1s\n"}
+,{"stream_name":"stdout","time":1973.126823104,"data":"  it=9,100,000 T=0.00000 score=16 best=15 reh=73 1971.8s\n"}
+,{"stream_name":"stdout","time":1995.709645715,"data":"  it=9,200,000 T=0.00000 score=21 best=15 reh=74 1994.4s\n"}
+,{"stream_name":"stdout","time":2017.997351287,"data":"  it=9,300,000 T=0.00000 score=16 best=15 reh=75 2016.7s\n"}
+,{"stream_name":"stdout","time":2040.50902298,"data":"  it=9,400,000 T=0.00000 score=16 best=15 reh=76 2039.2s\n"}
+,{"stream_name":"stdout","time":2062.934323028,"data":"  it=9,500,000 T=0.00000 score=17 best=15 reh=77 2061.6s\n"}
+,{"stream_name":"stdout","time":2084.791038017,"data":"  it=9,600,000 T=0.00000 score=21 best=15 reh=78 2083.5s\n"}
+,{"stream_name":"stdout","time":2106.448165155,"data":"  it=9,700,000 T=0.00000 score=17 best=15 reh=79 2105.1s\n"}
+,{"stream_name":"stdout","time":2128.275819949,"data":"  it=9,800,000 T=0.00000 score=24 best=15 reh=80 2127.0s\n"}
+,{"stream_name":"stdout","time":2150.24226585,"data":"  it=9,900,000 T=0.00000 score=26 best=15 reh=81 2148.9s\n"}
+,{"stream_name":"stdout","time":2171.657582329,"data":"  it=10,000,000 T=0.00000 score=22 best=15 reh=82 2170.3s\n"}
+,{"stream_name":"stdout","time":2171.657656015,"data":"\n"}
+,{"stream_name":"stdout","time":2171.65766329,"data":"Final Stats: {'best': 15, 'iters': 10000000}\n"}
+,{"stream_name":"stderr","time":2175.038745846,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":2175.038832845,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":2175.557978898,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":2175.558041437,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":2178.041054512,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":2180.002382544,"data":"[NbConvertApp] Writing 337299 bytes to __results__.html\n"}
+]

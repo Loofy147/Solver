@@ -413,7 +413,7 @@ def print_status():
     rows = [
         ("P1", "k=4, m=4 (G_4^4)",    "Fiber-uniform impossible (Thm 10.1). Best score: 16.", "OPEN"),
         ("P2", "m=6, k=3 (G_6)",       "Best score: 8.0. PROVED: depth-3 barrier.", "OPEN"),
-        ("P3", "m=8, k=3 (G_8)",       "Best score: 25",                        "OPEN"),
+        ("P3", "m=8, k=3 (G_8)",       "Best score: 15",                        "OPEN"),
         ("P4", "W7 formula",            "FIXED: phi(m)×coprime_b^(k-1). Exact for m=3.",      "RESOLVED"),
         ("P5", "Non-abelian S_3",       "PROVED: same parity law. k=2 ok, k=3 blocked.",      "RESOLVED"),
         ("P6", "Product Z_m×Z_n",       "PROVED: fiber quotient=Z_gcd. Framework complete.",  "RESOLVED"),
