@@ -1,0 +1,8 @@
+[{"stream_name":"stdout","time":5.262263071,"data":"Commit phase: Running gateway with /kaggle/input/ai-mathematical-olympiad-progress-prize-3/test.csv\n"}
+,{"stream_name":"stderr","time":8.65481213,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":8.654856701,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":8.885702776,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":8.885725808,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":9.588356422,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":10.801431396,"data":"[NbConvertApp] Writing 301624 bytes to __results__.html\n"}
+]
